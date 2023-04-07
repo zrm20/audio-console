@@ -6,6 +6,8 @@ export const PRE_AMP_STEPS = 1;
 export const BUS_MIN = 0;
 export const BUS_MAX = 100;
 
+export const FADER_STEPS = 1;
+
 
 export const NOMINAL_LEVEL = 88 // the value that is considered nominal line level
 
