@@ -1,19 +1,19 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { Knob, KnobChangeEvent } from 'primereact/knob';
 
 import useStyles from './GainKnob.styles';
 import { PRE_AMP_MAX_GAIN, PRE_AMP_MIN_GAIN, PRE_AMP_STEPS } from '../../../constants/gainValues';
+import { COMPONENT_SIZE } from '../../../constants/primeReactSizes';
 
 interface GainKnobProps {
   value: number;
   onChange(evt: KnobChangeEvent): void;
-  size?: number
 };
 
 export default function GainKnob(props: GainKnobProps): JSX.Element {
-  const { size = 50, value, onChange } = props;
-  const styles = useStyles(size);
+  const { value, onChange } = props;
+  const styles = useStyles();
 
   function constrainValue(value: number): number {
     // limit the rendered value to the min and max constraints
@@ -35,10 +35,10 @@ export default function GainKnob(props: GainKnobProps): JSX.Element {
         min={PRE_AMP_MIN_GAIN}
         max={PRE_AMP_MAX_GAIN}
         valueTemplate={`+${value}dB`}
-        size={size}
+        size={COMPONENT_SIZE}
         role="slider"
       />
-      <Typography variant='caption'>Gain</Typography>
+      <label>Gain</label>
     </Box>
   );
 };

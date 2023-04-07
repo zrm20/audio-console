@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { Knob } from "primereact/knob";
 import { PRE_AMP_MAX_GAIN, PRE_AMP_MIN_GAIN, PRE_AMP_STEPS } from "../../../constants/gainValues";
+import { COMPONENT_SIZE } from "../../../constants/primeReactSizes";
 
 import GainKnob from "./GainKnob";
 import useStyles from "./GainKnob.styles";
@@ -30,7 +31,7 @@ describe('<GainKnob />', () => {
         {
           value: value,
           onChange: changeFn,
-          size: 50,
+          size: COMPONENT_SIZE,
           min: PRE_AMP_MIN_GAIN,
           max: PRE_AMP_MAX_GAIN,
           step: PRE_AMP_STEPS,
@@ -39,24 +40,6 @@ describe('<GainKnob />', () => {
       ),
       {}
     );
-  });
-
-  it("should pass size prop if included", () => {
-    const value = 12;
-    const changeFn = jest.fn();
-    const size = 51
-
-    render(<GainKnob value={value} onChange={changeFn} size={size}/>);
-
-    expect(Knob).toHaveBeenCalledWith(
-      expect.objectContaining(
-        {
-          size: size,
-        }
-      ),
-      {}
-    );
-    expect(useStyles).toHaveBeenCalledWith(size);
   });
 
   it("should set value to min constant if value is under min constant", () => {
