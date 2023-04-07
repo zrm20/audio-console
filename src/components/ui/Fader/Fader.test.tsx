@@ -42,7 +42,7 @@ describe('<Fader />', () => {
 
   it("should render a label with - for number less than nominal", () => {
     // Arrange
-    const value = 50;
+    const value = NOMINAL_LEVEL - 1;
     const changeFn = jest.fn();
 
     // Act
@@ -55,7 +55,7 @@ describe('<Fader />', () => {
 
   it("should render a label with + for number more than nominal", () => {
     // Arrange
-    const value = 90;
+    const value = NOMINAL_LEVEL + 1;
     const changeFn = jest.fn();
 
     // Act
