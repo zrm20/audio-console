@@ -9,6 +9,6 @@ export const BUS_STEPS = 1;
 
 export const FADER_STEPS = 1;
 
-
 export const NOMINAL_LEVEL = 88 // the value that is considered nominal line level
-
+export const METER_MIN = 0;
+export const METER_MAX = 100;
