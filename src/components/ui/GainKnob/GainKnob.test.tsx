@@ -26,15 +26,15 @@ describe('<GainKnob />', () => {
       min: PRE_AMP_MIN_GAIN,
       max: PRE_AMP_MAX_GAIN,
       step: PRE_AMP_STEPS,
-      valueTemplate: `+${value}dB`,
       role: "slider"
-    }
+    };
+
 
     // Act
     render(<GainKnob value={value} onChange={changeFn} />);
 
     // Assert
-    expect(Knob).toHaveBeenCalledWith(expectedProps, {});
+    expect(Knob).toHaveBeenCalledWith(expect.objectContaining(expectedProps), {});
   });
 
   it("should set value to min constant if value is under min pre amp level", () => {

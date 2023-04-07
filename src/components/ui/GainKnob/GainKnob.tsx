@@ -5,6 +5,7 @@ import { Knob, KnobChangeEvent } from 'primereact/knob';
 import useStyles from './GainKnob.styles';
 import { PRE_AMP_MAX_GAIN, PRE_AMP_MIN_GAIN, PRE_AMP_STEPS } from '../../../constants/gainValues';
 import { COMPONENT_SIZE } from '../../../constants/primeReactSizes';
+import { constrainValue } from '../../../utils';
 
 interface GainKnobProps {
   value: number;
@@ -15,21 +16,10 @@ export default function GainKnob(props: GainKnobProps): JSX.Element {
   const { value, onChange } = props;
   const styles = useStyles();
 
-  function constrainValue(value: number): number {
-    // limit the rendered value to the min and max constraints
-    if(value < PRE_AMP_MIN_GAIN) {
-      return PRE_AMP_MIN_GAIN
-    } else if (value > PRE_AMP_MAX_GAIN) {
-      return PRE_AMP_MAX_GAIN
-    } else {
-      return value
-    }
-  };
-
   return (
     <Box sx={styles.root}>
       <Knob
-        value={constrainValue(value)}
+        value={constrainValue(value, PRE_AMP_MIN_GAIN, PRE_AMP_MAX_GAIN)}
         onChange={onChange}
         step={PRE_AMP_STEPS}
         min={PRE_AMP_MIN_GAIN}
