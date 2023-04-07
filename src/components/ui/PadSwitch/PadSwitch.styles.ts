@@ -9,12 +9,11 @@ export default function useStyles(): Style {
 
   return {
     root: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      '& label': {
+      '& .p-togglebutton': {
         fontSize: LABEL_SIZE,
-        mt: 1
+        display: 'flex',
+        flexDirection: 'column',
+        p: 1 / 2
       }
     },
   };

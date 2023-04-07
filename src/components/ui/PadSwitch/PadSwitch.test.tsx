@@ -1,48 +1,37 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { Checkbox, CheckboxProps } from 'primereact/checkbox';
+import { ToggleButton, ToggleButtonProps } from 'primereact/togglebutton';
 
 import PadSwitch from './PadSwitch';
 import { PRE_AMP_PAD_LEVEL } from '../../../constants/gainValues';
 
-jest.mock("primereact/checkbox", () => (
+jest.mock("primereact/togglebutton", () => (
   {
-    Checkbox: jest.fn()
+    ToggleButton: jest.fn()
   }
 ))
 
 describe('<PadSwitch />', () => {
-  let mockCheckbox = Checkbox as jest.Mock;
+  let mockToggleButton = ToggleButton as jest.Mock;
   beforeEach(() => {
-    mockCheckbox.mockReset();
+    mockToggleButton.mockReset();
   });
 
-  it("should render a checkbox correct props", () => {
+  it("should render a ToggleButton correct props", () => {
     // Arrange
     const value = true;
     const changeFn = jest.fn();
-    const expectedProps: CheckboxProps = {
+    const expectedProps: ToggleButtonProps = {
       checked: value,
-      onChange: changeFn
+      onChange: changeFn,
+      onLabel: `${PRE_AMP_PAD_LEVEL}dB`,
+      offLabel: `${PRE_AMP_PAD_LEVEL}dB`
     };
 
     // Act
     render(<PadSwitch value={value} onChange={changeFn} />);
 
     // Assert
-    expect(Checkbox).toHaveBeenCalledWith(expectedProps, {});
+    expect(ToggleButton).toHaveBeenCalledWith(expectedProps, {});
   });
-
-  it("should render a label that says 'Pad'", () => {
-    // Arrange
-    const value = true;
-    const changeFn = jest.fn();
-
-    // Act
-    render(<PadSwitch value={value} onChange={changeFn} />);
-
-    // Assert
-    expect(screen.queryByText(`${PRE_AMP_PAD_LEVEL} Pad`)).not.toBeNull();
-  })
-
 });

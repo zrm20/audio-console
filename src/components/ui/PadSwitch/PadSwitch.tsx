@@ -1,13 +1,13 @@
 import React from 'react';
 import { Box } from '@mui/material';
+import { ToggleButton, ToggleButtonChangeEvent } from 'primereact/togglebutton';
 
 import useStyles from './PadSwitch.styles';
-import { Checkbox, CheckboxChangeEvent } from 'primereact/checkbox';
 import { PRE_AMP_PAD_LEVEL } from '../../../constants/gainValues';
 
 interface PadSwitchProps {
   value: boolean;
-  onChange(evt: CheckboxChangeEvent): void;
+  onChange(evt: ToggleButtonChangeEvent): void;
 };
 
 export default function PadSwitch(props: PadSwitchProps): JSX.Element {
@@ -16,8 +16,12 @@ export default function PadSwitch(props: PadSwitchProps): JSX.Element {
 
   return (
     <Box sx={styles.root}>
-      <Checkbox checked={value} onChange={onChange} />
-      <label>{PRE_AMP_PAD_LEVEL} Pad</label>
+      <ToggleButton
+        checked={value}
+        onChange={onChange}
+        onLabel={`${PRE_AMP_PAD_LEVEL}dB`}
+        offLabel={`${PRE_AMP_PAD_LEVEL}dB`}
+      />
     </Box>
   );
 };
