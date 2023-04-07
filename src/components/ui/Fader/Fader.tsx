@@ -4,6 +4,7 @@ import { Slider, SliderChangeEvent } from 'primereact/slider';
 
 import useStyles from './Fader.styles';
 import { BUS_MAX, BUS_MIN, FADER_STEPS, NOMINAL_LEVEL } from '../../../constants/gainValues';
+import { constrainValue } from '../../../utils';
 
 interface FaderProps {
   value: number;
@@ -14,16 +15,6 @@ export default function Fader(props: FaderProps): JSX.Element {
   const { value, onChange } = props;
   const styles = useStyles();
 
-  function constrainValue(value: number): number {
-    if(value < BUS_MIN) {
-      return BUS_MIN
-    } else if (value > BUS_MAX) {
-      return BUS_MAX
-    };
-
-    return value;
-  }
-
   return (
     <Box sx={styles.root}>
       <label htmlFor="fader">
@@ -31,7 +22,7 @@ export default function Fader(props: FaderProps): JSX.Element {
       </label>
       <Slider 
         id="fader"
-        value={constrainValue(value)}
+        value={constrainValue(value, BUS_MIN, BUS_MAX)}
         onChange={onChange}
         orientation="vertical"
         min={BUS_MIN}
