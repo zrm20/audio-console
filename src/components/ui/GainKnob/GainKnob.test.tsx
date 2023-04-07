@@ -1,83 +1,81 @@
 import { render, screen } from "@testing-library/react";
-import { Knob } from "primereact/knob";
+import { Knob, KnobProps } from "primereact/knob";
 import { PRE_AMP_MAX_GAIN, PRE_AMP_MIN_GAIN, PRE_AMP_STEPS } from "../../../constants/gainValues";
 import { COMPONENT_SIZE } from "../../../constants/primeReactSizes";
 
 import GainKnob from "./GainKnob";
-import useStyles from "./GainKnob.styles";
 
-
-jest.mock("primereact/knob", () => {
-  return {
-    Knob: jest.fn()
-  }
-});
-
-jest.mock("./GainKnob.styles.ts", () => (jest.fn()));
+jest.mock("primereact/knob", () => ({
+  Knob: jest.fn()
+}));
 
 describe('<GainKnob />', () => {
+  let mockKnob = Knob as jest.Mock;
   beforeEach(() => {
-    const mockUseStyles = useStyles as jest.Mock;
-    mockUseStyles.mockReturnValue({ root: {} })
+    mockKnob.mockReset();
   });
 
-  it("should render a Knob component with value, and other props", () => {
+  it("should render a Knob component with correct props", () => {
+    // Arrange
     const value = 12;
     const changeFn = jest.fn();
+    const expectedProps: KnobProps = {
+      value,
+      onChange: changeFn,
+      size: COMPONENT_SIZE,
+      min: PRE_AMP_MIN_GAIN,
+      max: PRE_AMP_MAX_GAIN,
+      step: PRE_AMP_STEPS,
+      valueTemplate: `+${value}dB`,
+      role: "slider"
+    }
 
+    // Act
     render(<GainKnob value={value} onChange={changeFn} />);
-    expect(Knob).toHaveBeenCalledWith(
-      expect.objectContaining(
-        {
-          value: value,
-          onChange: changeFn,
-          size: COMPONENT_SIZE,
-          min: PRE_AMP_MIN_GAIN,
-          max: PRE_AMP_MAX_GAIN,
-          step: PRE_AMP_STEPS,
-          valueTemplate: `+${value}dB`
-        }
-      ),
-      {}
-    );
+
+    // Assert
+    expect(Knob).toHaveBeenCalledWith(expectedProps, {});
   });
 
-  it("should set value to min constant if value is under min constant", () => {
+  it("should set value to min constant if value is under min pre amp level", () => {
+    // Arrange
     const value = PRE_AMP_MIN_GAIN - 1;
     const changeFn = jest.fn();
 
+    // Act
     render(<GainKnob value={value} onChange={changeFn} />);
+
+    // Assert
     expect(Knob).toHaveBeenCalledWith(
       expect.objectContaining(
-        {
-          value: PRE_AMP_MIN_GAIN,
-        }
-      ),
-      {}
-    );
+        { value: PRE_AMP_MIN_GAIN }
+      ), {});
   });
 
-  it("should set value to max constant if value is above max constant", () => {
+  it("should set value to max constant if value is above max pre amp level", () => {
+    // Arrange
     const value = PRE_AMP_MAX_GAIN + 1;
     const changeFn = jest.fn();
 
+    // Act
     render(<GainKnob value={value} onChange={changeFn} />);
+
+    // Assert
     expect(Knob).toHaveBeenCalledWith(
       expect.objectContaining(
-        {
-          value: PRE_AMP_MAX_GAIN,
-        }
-      ),
-      {}
-    );
+        { value: PRE_AMP_MAX_GAIN }
+      ), {});
   });
 
   it("should render a label of 'Gain'", () => {
+    // Arrange
     const value = PRE_AMP_MAX_GAIN + 1;
     const changeFn = jest.fn();
 
+    // Act
     render(<GainKnob value={value} onChange={changeFn} />);
 
+    // Assert
     expect(screen.queryByText("Gain")).not.toBeNull();
   })
 });
