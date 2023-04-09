@@ -1,9 +1,10 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { ProgressBar, ProgressBarProps } from 'primereact/progressbar';
+import { ProgressBar } from 'primereact/progressbar';
 
 import Meter from './Meter';
-import { METER_MAX, METER_MIN, NOMINAL_LEVEL } from '../../../constants/gainValues';
+import { MIN_DBFS_VALUE } from '../../../constants/audioLevels';
+import { DBFS_NOMINAL } from '../../../constants/busLevels';
 
 jest.mock('primereact/progressbar', () => ({
   ProgressBar: jest.fn()
@@ -11,79 +12,116 @@ jest.mock('primereact/progressbar', () => ({
 
 describe('<Meter />', () => {
   let mockProgressBar = ProgressBar as jest.Mock;
+
   beforeEach(() => {
     mockProgressBar.mockReset();
   });
 
-  it("should render a Progress bar with value prop", () => {
+  it("should render a ProgressBar with percentage value", () => {
     // Arrange
-    const value = 50;
-    const expectedProps: ProgressBarProps = { value };
+    const input = MIN_DBFS_VALUE / 2;
+    const expectedProps = expect.objectContaining({ value: 50 });
 
     // Act
-    render(<Meter value={value} />);
+    render(<Meter signalLevel={input}/>)
 
     // Assert
-    expect(mockProgressBar).toHaveBeenCalledWith(expect.objectContaining(expectedProps), {});
+    expect(mockProgressBar).toHaveBeenCalledWith(expectedProps, {});
   });
 
-  it("should render green for value equal to nominal", () => {
+  it("should render a ProgressBar with value of 0 if signal is MIN_DBFS and green color", () => {
     // Arrange
-    const value = NOMINAL_LEVEL;
-    const expectedProps: ProgressBarProps = { color: "green" };
+    const input = MIN_DBFS_VALUE;
+    const expectedProps = expect.objectContaining({ value: 0 });
 
     // Act
-    render(<Meter value={value} />);
+    render(<Meter signalLevel={input}/>)
 
     // Assert
-    expect(mockProgressBar).toHaveBeenCalledWith(expect.objectContaining(expectedProps), {});
+    expect(mockProgressBar).toHaveBeenCalledWith(expectedProps, {});
   });
 
-  it("should render yellow for value above nominal", () => {
+  it("should render a ProgressBar with value of 0 if signal is under MIN_DBFS", () => {
     // Arrange
-    const value = NOMINAL_LEVEL + 1;
-    const expectedProps: ProgressBarProps = { color: "yellow" };
+    const input = MIN_DBFS_VALUE - 1;
+    const expectedProps = expect.objectContaining({ value: 0 });
 
     // Act
-    render(<Meter value={value} />);
+    render(<Meter signalLevel={input}/>)
 
     // Assert
-    expect(mockProgressBar).toHaveBeenCalledWith(expect.objectContaining(expectedProps), {});
+    expect(mockProgressBar).toHaveBeenCalledWith(expectedProps, {});
   });
 
-  it("should render red for value equal to max", () => {
+  it("should render a ProgressBar with percentage value of 100 if signal is 0", () => {
     // Arrange
-    const value = METER_MAX;
-    const expectedProps: ProgressBarProps = { color: "red" };
+    const input = 0;
+    const expectedProps = expect.objectContaining({ value: 100 });
 
     // Act
-    render(<Meter value={value} />);
+    render(<Meter signalLevel={input}/>)
 
     // Assert
-    expect(mockProgressBar).toHaveBeenCalledWith(expect.objectContaining(expectedProps), {});
+    expect(mockProgressBar).toHaveBeenCalledWith(expectedProps, {});
   });
 
-  it("should have have value constrained to minimum", () => {
+  it("should render a ProgressBar with percentage value of 100 if signal over 0", () => {
     // Arrange
-    const value = METER_MIN - 1;
-    const expectedProps: ProgressBarProps = { value: METER_MIN };
+    const input = 1;
+    const expectedProps = expect.objectContaining({ value: 100 });
 
     // Act
-    render(<Meter value={value} />);
+    render(<Meter signalLevel={input}/>)
 
     // Assert
-    expect(mockProgressBar).toHaveBeenCalledWith(expect.objectContaining(expectedProps), {});
+    expect(mockProgressBar).toHaveBeenCalledWith(expectedProps, {});
   });
 
-  it("should have have value constrained to maximum", () => {
+  it("should have a color of red if percentage value is 100+", () => {
     // Arrange
-    const value = METER_MAX + 1;
-    const expectedProps: ProgressBarProps = { value: METER_MAX };
+    const input = 1;
+    const expectedProps = expect.objectContaining({ color: 'red' });
 
     // Act
-    render(<Meter value={value} />);
+    render(<Meter signalLevel={input}/>)
 
     // Assert
-    expect(mockProgressBar).toHaveBeenCalledWith(expect.objectContaining(expectedProps), {});
+    expect(mockProgressBar).toHaveBeenCalledWith(expectedProps, {});
+  });
+
+  it("should have a color of yellow if percentage value is above nominal", () => {
+    // Arrange
+    const input = -50;
+    const expectedProps = expect.objectContaining({ color: 'yellow' });
+
+    // Act
+    render(<Meter signalLevel={input} nominalLevel={-51}/>)
+
+    // Assert
+    expect(mockProgressBar).toHaveBeenCalledWith(expectedProps, {});
+  });
+
+  it("should have a color of green if percentage value is equal to nominal", () => {
+    // Arrange
+    const input = -50;
+    const expectedProps = expect.objectContaining({ color: 'green' });
+
+    // Act
+    render(<Meter signalLevel={input} nominalLevel={-50}/>)
+
+    // Assert
+    expect(mockProgressBar).toHaveBeenCalledWith(expectedProps, {});
+  });
+
+  it("should default nominal level to constant", () => {
+    // Arrange
+    const input = DBFS_NOMINAL + 1;
+    const expectedProps = expect.objectContaining({ color: 'yellow' });
+
+    // Act
+    render(<Meter signalLevel={input}/>)
+
+    // Assert
+    expect(mockProgressBar).toHaveBeenCalledWith(expectedProps, {});
   });
 });
