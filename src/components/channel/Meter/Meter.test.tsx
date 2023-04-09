@@ -154,4 +154,28 @@ describe('<Meter />', () => {
     expect(shown).not.toBeNull();
     expect(hidden).toBeNull();
   });
+
+  it("should show value label", () => {
+    // Arrange
+    const input = -25;
+
+    // Act
+    render(<Meter signalLevel={input} />)
+    const valueLabel = screen.queryByText(`${input} dBfs`);
+
+    // Assert
+    expect(valueLabel).not.toBeNull();
+  });
+
+  it("should show value label of MIN_DBFS for signal below minimum", () => {
+    // Arrange
+    const input = MIN_DBFS_VALUE - 1;
+
+    // Act
+    render(<Meter signalLevel={input} />)
+    const valueLabel = screen.queryByText(`${MIN_DBFS_VALUE} dBfs`);
+
+    // Assert
+    expect(valueLabel).not.toBeNull();
+  });
 });

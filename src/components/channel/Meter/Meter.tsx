@@ -3,8 +3,9 @@ import { Box } from '@mui/material';
 import { ProgressBar } from "primereact/progressbar";
 
 import useStyles from './Meter.styles';
-import { convertDbToPercentage } from '../../../utils';
+import { convertDbToPercentage, constrainValue } from '../../../utils';
 import { DBFS_NOMINAL } from '../../../constants/busLevels';
+import { MIN_DBFS_VALUE } from '../../../constants/audioLevels';
 
 interface MeterProps {
   signalLevel: number; // Signal Level in dBfs
@@ -44,6 +45,7 @@ export default function Meter(props: MeterProps): JSX.Element {
           id="meter"
         />
       </Box>
+      <label>{constrainValue(signalLevel, MIN_DBFS_VALUE, 0)} dBfs</label>
     </Box>
   );
 };
