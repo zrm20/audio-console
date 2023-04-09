@@ -3,6 +3,7 @@ import { METER_SIZE, METER_THICKNESS } from '../../../constants/primeReactSizes'
 
 interface Style {
   root: SxProps;
+  meterContainer: SxProps;
 };
 
 export default function useStyles(size: number): Style {
@@ -10,6 +11,15 @@ export default function useStyles(size: number): Style {
 
   return {
     root: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      py: 1 * sizeMultiplier,
+      '& label': {
+        fontSize: 12 * sizeMultiplier
+      },
+    },
+    meterContainer: {
       display: 'flex',
       my: 1 * sizeMultiplier,
       flexDirection: 'column',
@@ -20,11 +30,11 @@ export default function useStyles(size: number): Style {
       height: METER_SIZE * sizeMultiplier,
       '& .p-progressbar': {
         rotate: '-90deg',
-        width: METER_SIZE * .95 * sizeMultiplier,
-        height: METER_THICKNESS * .9 * sizeMultiplier,
+        width: METER_SIZE * sizeMultiplier,
+        height: METER_THICKNESS * sizeMultiplier,
         p: 0,
         m: 0
       }
-    },
+    }
   };
 };

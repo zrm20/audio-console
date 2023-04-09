@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { ProgressBar } from 'primereact/progressbar';
 
 import Meter from './Meter';
@@ -123,5 +123,35 @@ describe('<Meter />', () => {
 
     // Assert
     expect(mockProgressBar).toHaveBeenCalledWith(expectedProps, {});
+  });
+
+  it("should render a title if passed", () => {
+    // Arrange
+    const input = DBFS_NOMINAL + 1;
+    const title = "test";
+
+    // Act
+    render(<Meter signalLevel={input} title={title} />)
+    const text = screen.findByAltText(title);
+
+    // Assert
+    expect(text).not.toBeNull();
+  });
+
+  it("should trim title to 10 chars", () => {
+    // Arrange
+    const input = DBFS_NOMINAL + 1;
+    const title = "0123456789cutoff";
+    const shownText = title.slice(0, 10);
+    const hiddenText = title.slice(11);
+
+    // Act
+    render(<Meter signalLevel={input} title={title} />)
+    const shown = screen.queryByText(shownText);
+    const hidden = screen.queryByText(hiddenText);
+
+    // Assert
+    expect(shown).not.toBeNull();
+    expect(hidden).toBeNull();
   });
 });

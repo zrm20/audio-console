@@ -3,31 +3,47 @@ import { Box } from '@mui/material';
 import { ProgressBar } from "primereact/progressbar";
 
 import useStyles from './Meter.styles';
-import { constrainValue } from '../../../utils';
-import { METER_MAX, METER_MIN, NOMINAL_LEVEL } from '../../../constants/gainValues';
+import { convertDbToPercentage } from '../../../utils';
+import { DBFS_NOMINAL } from '../../../constants/busLevels';
 
 interface MeterProps {
-  value: number;
+  signalLevel: number; // Signal Level in dBfs
+  nominalLevel?: number; // dBfs level considered "nominal line level"
+  size?: number; // relative size based on default of 100
+  title?: string;
 };
 
 type MeterColor = "green" | "yellow" | "red"
 
 export default function Meter(props: MeterProps): JSX.Element {
-  const styles = useStyles();
-  const value = constrainValue(props.value, METER_MIN, METER_MAX);
+  const { signalLevel, nominalLevel = DBFS_NOMINAL, size = 100, title } = props;
+  const styles = useStyles(size);
+
+  const dbValueAsPercentage = convertDbToPercentage(signalLevel);
 
   function setColor(): MeterColor {
-    if(value === METER_MAX) {
+    if (signalLevel >= 0) {
       return "red";
-    } else if (value > NOMINAL_LEVEL) {
+    } else if (signalLevel > nominalLevel) {
       return "yellow";
     };
     return "green"
   };
 
   return (
-   <Box sx={styles.root}>
-    <ProgressBar value={value} showValue={false} color={setColor()}/>
-   </Box>
+    <Box sx={styles.root}>
+      {
+        Boolean(title) &&
+        <label htmlFor="meter">{title?.slice(0, 10)}</label>
+      }
+      <Box sx={styles.meterContainer}>
+        <ProgressBar
+          value={dbValueAsPercentage}
+          showValue={false}
+          color={setColor()}
+          id="meter"
+        />
+      </Box>
+    </Box>
   );
 };
