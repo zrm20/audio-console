@@ -12,6 +12,7 @@ export default function useStyles(): Style {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+      my: 1/2,
       '& .p-knob': {
         marginBottom: -1
       },

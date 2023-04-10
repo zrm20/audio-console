@@ -3,10 +3,10 @@ import { Box } from '@mui/material';
 import { Knob, KnobChangeEvent } from 'primereact/knob';
 import { ToggleButton, ToggleButtonChangeEvent } from 'primereact/togglebutton';
 
-import { BUS_MAX, BUS_MIN, BUS_STEPS, NOMINAL_LEVEL } from '../../../constants/gainValues';
 import { COMPONENT_SIZE } from '../../../constants/primeReactSizes';
 import { constrainValue } from '../../../utils';
 import useStyles from './BusSend.styles';
+import { BUS_MAX_GAIN, BUS_MIN_GAIN } from '../../../constants/busLevels';
 
 interface BusSendProps {
   value: number;
@@ -14,25 +14,46 @@ interface BusSendProps {
   name: string;
   isPreFader: boolean;
   onIsPreFaderChange(evt: ToggleButtonChangeEvent): void;
+  size?: number;
 };
 
 export default function BusSend(props: BusSendProps): JSX.Element {
-  const { value, onChange, name, isPreFader, onIsPreFaderChange} = props;
+  const { value, onChange, name, isPreFader, onIsPreFaderChange, size = 100 } = props;
   const styles = useStyles();
-  const id = `bus-${name}`
+  const id = `bus-${name}`;
+  const sizeMultiplier = size / 100;
+
+  // for correct display, all slider values should be positive
+  // min should be 0
+  // max should be 0 + delta(MAX - MIN)
+  // example: -96 to +12 should shift to 0 to 108
+  const valueShift = 0 - BUS_MIN_GAIN;
+
+  function handleChange(evt: KnobChangeEvent): void {
+    // value received from evt will be shifted based on valueShift
+    // ex: a gain of +12 might be stored on evt as +108 if valueShift is +96
+    // needs to shift back to receive the actual gain change;
+    const actualGainChange = evt.value - valueShift;
+
+    // create a new evt representing the knob change event to call with props.onChange
+    const newEvt: KnobChangeEvent = { ...evt, value: actualGainChange };
+    onChange(newEvt);
+  };
+
+  const constrainedValue = constrainValue(value + valueShift, 0, BUS_MAX_GAIN + valueShift);
 
   return (
-    <Box sx={styles.root}>
+    <Box sx={styles.root} data-testid="contain">
       <Knob
-        value={constrainValue(value, BUS_MIN, BUS_MAX)}
-        onChange={onChange}
+        value={constrainedValue}
+        onChange={handleChange}
         role="slider"
-        min={BUS_MIN}
-        max={BUS_MAX}
-        step={BUS_STEPS}
-        size={COMPONENT_SIZE}
+        min={0}
+        max={BUS_MAX_GAIN + valueShift}
+        step={1}
+        size={COMPONENT_SIZE * sizeMultiplier}
         id={id}
-        valueTemplate={`${(value > NOMINAL_LEVEL) ? '+' : ''}${value - NOMINAL_LEVEL}dB`}
+        valueTemplate={value > 0 ? `+${value}dB`: `${value}dB`}
       />
       <label htmlFor={id}>{name}</label>
 
