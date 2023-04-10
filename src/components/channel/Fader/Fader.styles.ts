@@ -10,7 +10,6 @@ export default function useStyles(size: number): Style {
 
   return {
     root: {
-      border: 1,
       py: 1 * sizeMultiplier,
       display: 'flex',
       flexDirection: 'column',
