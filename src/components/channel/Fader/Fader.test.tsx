@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { Slider, SliderProps } from 'primereact/slider';
 
 import Fader from './Fader';
-import { BUS_MAX, BUS_MIN, FADER_STEPS, NOMINAL_LEVEL } from '../../../constants/gainValues';
+import { BUS_MAX_GAIN, BUS_MIN_GAIN } from '../../../constants/busLevels';
 
 jest.mock('primereact/slider', () => (
   {
@@ -19,61 +19,80 @@ describe('<Fader />', () => {
     mockSlider.mockReset();
   })
 
-  it("should render a slider with correct props", () => {
+  it("should render a Slider component with correct props", () => {
     // Arrange
-    const value = 50;
-    const changeFn = jest.fn();
-    const expectedProps: SliderProps = {
+    const value = 0;
+    const onChange = jest.fn();
+    const sliderProps: SliderProps = {
       value,
-      onChange: changeFn,
-      min: BUS_MIN,
-      max: BUS_MAX,
-      step: FADER_STEPS,
+      onChange,
       orientation: "vertical",
-      id: 'fader'
-    }
+      min: BUS_MIN_GAIN,
+      max: BUS_MAX_GAIN,
+      id: "fader"
+    };
+    const expectedProps = expect.objectContaining(sliderProps);
 
     // Act
-    render(<Fader value={value} onChange={changeFn} />);
+    render(<Fader value={value} onChange={onChange} />);
 
     // Assert
-    expect(mockSlider).toHaveBeenLastCalledWith(expectedProps, {})
+    expect(mockSlider).toHaveBeenCalledWith(expectedProps, {});
   });
 
-  it("should render a label with - for number less than nominal", () => {
+  it("should use a value of BUS_MAX_GAIN if value is above max", () => {
     // Arrange
-    const value = NOMINAL_LEVEL - 1;
-    const changeFn = jest.fn();
+    const value = BUS_MAX_GAIN + 1;
+    const onChange = jest.fn();
+    const sliderProps: SliderProps = {
+      value: BUS_MAX_GAIN
+    };
+    const expectedProps = expect.objectContaining(sliderProps);
 
     // Act
-    render(<Fader value={value} onChange={changeFn} />);
-    const label = screen.queryByText(`${value - NOMINAL_LEVEL}dB`);
+    render(<Fader value={value} onChange={onChange} />);
+
+    // Assert
+    expect(mockSlider).toHaveBeenCalledWith(expectedProps, {});
+  });
+
+  it("should use a value of BUS_MIN_GAIN if value is below min", () => {
+    // Arrange
+    const value = BUS_MIN_GAIN - 1;
+    const onChange = jest.fn();
+    const sliderProps: SliderProps = {
+      value: BUS_MIN_GAIN
+    };
+    const expectedProps = expect.objectContaining(sliderProps);
+
+    // Act
+    render(<Fader value={value} onChange={onChange} />);
+
+    // Assert
+    expect(mockSlider).toHaveBeenCalledWith(expectedProps, {});
+  });
+
+  it("should render a label containing the value", () => {
+    // Arrange
+    const value = BUS_MIN_GAIN + 1;
+    const onChange = jest.fn();
+
+    // Act
+    render(<Fader value={value} onChange={onChange} />);
+    const label = screen.queryByText(`${value}dB`)
 
     // Assert
     expect(label).not.toBeNull();
   });
 
-  it("should render a label with + for number more than nominal", () => {
+  it("should render a label with a + for positive gain", () => {
     // Arrange
-    const value = NOMINAL_LEVEL + 1;
-    const changeFn = jest.fn();
+    const value = BUS_MAX_GAIN;
+    const onChange = jest.fn();
 
     // Act
-    render(<Fader value={value} onChange={changeFn} />);
-    const label = screen.queryByText(`+${value - NOMINAL_LEVEL}dB`);
-
-    // Assert
-    expect(label).not.toBeNull();
-  });
-
-  it("should render a label with neither - or + for number equal to nominal", () => {
-    // Arrange
-    const value = NOMINAL_LEVEL;
-    const changeFn = jest.fn();
-
-    // Act
-    render(<Fader value={value} onChange={changeFn} />);
-    const label = screen.queryByText(`0dB`);
+    render(<Fader value={value} onChange={onChange} />);
+    const label = screen.queryByText(`+${value}dB`)
 
     // Assert
     expect(label).not.toBeNull();

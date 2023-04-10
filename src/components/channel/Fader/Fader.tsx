@@ -3,32 +3,33 @@ import { Box } from '@mui/material';
 import { Slider, SliderChangeEvent } from 'primereact/slider';
 
 import useStyles from './Fader.styles';
-import { BUS_MAX, BUS_MIN, FADER_STEPS, NOMINAL_LEVEL } from '../../../constants/gainValues';
 import { constrainValue } from '../../../utils';
+import { BUS_MAX_GAIN, BUS_MIN_GAIN } from '../../../constants/busLevels';
 
 interface FaderProps {
   value: number;
   onChange(evt: SliderChangeEvent): void;
+  size?: number;
 };
 
 export default function Fader(props: FaderProps): JSX.Element {
-  const { value, onChange } = props;
-  const styles = useStyles();
+  const { value, onChange, size=100 } = props;
+  const styles = useStyles(size);
 
   return (
     <Box sx={styles.root}>
-      <label htmlFor="fader">
-        {value > NOMINAL_LEVEL && '+'}{value - NOMINAL_LEVEL}dB
-      </label>
       <Slider 
         id="fader"
-        value={constrainValue(value, BUS_MIN, BUS_MAX)}
+        value={constrainValue(value, BUS_MIN_GAIN, BUS_MAX_GAIN)}
         onChange={onChange}
         orientation="vertical"
-        min={BUS_MIN}
-        max={BUS_MAX}
-        step={FADER_STEPS}
+        min={BUS_MIN_GAIN}
+        max={BUS_MAX_GAIN}
+        step={1}
       />
+      <label htmlFor="fader">
+        {value > 0 && '+'}{value > BUS_MIN_GAIN ? value : '-∞'}dB
+      </label>
     </Box>
   );
 };
