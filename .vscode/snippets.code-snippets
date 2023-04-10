@@ -46,4 +46,18 @@
 		],
 		"description": "useStyles hook"
 	},
+
+	"Arrange, Act, Assert Component": {
+		"scope": "typescript, typescriptreact",
+		"prefix": "aaac",
+		"body": [
+			"// Arange",
+			"",
+			"// Act",
+			"render(<$0 />);",
+			"",
+			"// Assert",
+			"expect();"
+		]
+	}
 }
