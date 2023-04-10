@@ -7,6 +7,7 @@ import { COMPONENT_SIZE } from '../../../constants/primeReactSizes';
 import { constrainValue } from '../../../utils';
 import useStyles from './BusSend.styles';
 import { BUS_MAX_GAIN, BUS_MIN_GAIN } from '../../../constants/busLevels';
+import { MIN_DBFS_VALUE } from '../../../constants/audioLevels';
 
 interface BusSendProps {
   value: number;
@@ -42,6 +43,16 @@ export default function BusSend(props: BusSendProps): JSX.Element {
 
   const constrainedValue = constrainValue(value + valueShift, 0, BUS_MAX_GAIN + valueShift);
 
+  function getLabel(): string {
+    if(value > 0) {
+      return `+${value}dB`;
+    } else if(value <= MIN_DBFS_VALUE) {
+      return '-∞'
+    } else {
+      return `${value}dB`
+    };
+  };
+
   return (
     <Box sx={styles.root} data-testid="contain">
       <Knob
@@ -53,7 +64,7 @@ export default function BusSend(props: BusSendProps): JSX.Element {
         step={1}
         size={COMPONENT_SIZE * sizeMultiplier}
         id={id}
-        valueTemplate={value > 0 ? `+${value}dB`: `${value}dB`}
+        valueTemplate={getLabel()}
       />
       <label htmlFor={id}>{name}</label>
 

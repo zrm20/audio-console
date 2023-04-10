@@ -6,6 +6,7 @@ import { ToggleButton, ToggleButtonProps } from 'primereact/togglebutton';
 import BusSend from './BusSend';
 import { COMPONENT_SIZE } from '../../../constants/primeReactSizes';
 import { BUS_MAX_GAIN, BUS_MIN_GAIN } from '../../../constants/busLevels';
+import { MIN_DBFS_VALUE } from '../../../constants/audioLevels';
 
 jest.mock('primereact/knob', () => ({
   Knob: jest.fn()
@@ -161,5 +162,30 @@ describe('<BusSend />', () => {
 
     // Assert
     expect(mockToggleButton).toHaveBeenCalledWith(expectedProps, {});
+  });
+
+  it("should show label of -∞ if value is MIN_DBFS_VALUE", () => {
+    // Arrange
+    const value = MIN_DBFS_VALUE;
+    const changeFn = jest.fn();
+    const name = "testBus";
+    const isPre = true;
+    const onPreFadeChange = jest.fn();
+
+    const expectedProps = expect.objectContaining({ valueTemplate: '-∞'})
+
+    // Act
+    render(
+      <BusSend
+        value={value}
+        onChange={changeFn}
+        name={name}
+        isPreFader={isPre}
+        onIsPreFaderChange={onPreFadeChange}
+      />
+    );
+    // Assert
+    expect(mockKnob).toHaveBeenCalledWith(expectedProps, {});
+
   });
 });
