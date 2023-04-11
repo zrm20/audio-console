@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { ToggleButton, ToggleButtonProps } from 'primereact/togglebutton';
 
 import PadSwitch from './PadSwitch';
-import { PRE_AMP_PAD_LEVEL } from '../../../constants/gainValues';
+import { DEFAULT_PAD_LEVEL } from '../../../constants/busLevels';
 
 jest.mock("primereact/togglebutton", () => (
   {
@@ -17,19 +17,37 @@ describe('<PadSwitch />', () => {
     mockToggleButton.mockReset();
   });
 
-  it("should render a ToggleButton correct props", () => {
+  it("should render a ToggleButton correct props, default level of -20", () => {
     // Arrange
     const value = true;
     const changeFn = jest.fn();
     const expectedProps: ToggleButtonProps = {
       checked: value,
       onChange: changeFn,
-      onLabel: `${PRE_AMP_PAD_LEVEL}dB`,
-      offLabel: `${PRE_AMP_PAD_LEVEL}dB`
+      onLabel: `${DEFAULT_PAD_LEVEL}dB`,
+      offLabel: `${DEFAULT_PAD_LEVEL}dB`
     };
 
     // Act
     render(<PadSwitch value={value} onChange={changeFn} />);
+
+    // Assert
+    expect(ToggleButton).toHaveBeenCalledWith(expectedProps, {});
+  });
+  
+  it("should pass a padLevel prop", () => {
+    // Arrange
+    const padLevel = -10;
+    const value = true;
+    const changeFn = jest.fn();
+    const props: ToggleButtonProps = {
+      onLabel: `${padLevel}dB`,
+      offLabel: `${padLevel}dB`
+    };
+    const expectedProps = expect.objectContaining(props);
+
+    // Act
+    render(<PadSwitch value={value} onChange={changeFn} padLevel={padLevel} />);
 
     // Assert
     expect(ToggleButton).toHaveBeenCalledWith(expectedProps, {});

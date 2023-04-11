@@ -3,15 +3,16 @@ import { Box } from '@mui/material';
 import { ToggleButton, ToggleButtonChangeEvent } from 'primereact/togglebutton';
 
 import useStyles from './PadSwitch.styles';
-import { PRE_AMP_PAD_LEVEL } from '../../../constants/gainValues';
+import { DEFAULT_PAD_LEVEL } from '../../../constants/busLevels';
 
 interface PadSwitchProps {
   value: boolean;
   onChange(evt: ToggleButtonChangeEvent): void;
+  padLevel?: number;
 };
 
 export default function PadSwitch(props: PadSwitchProps): JSX.Element {
-  const { value, onChange } = props;
+  const { value, onChange, padLevel = DEFAULT_PAD_LEVEL } = props;
   const styles = useStyles();
 
   return (
@@ -19,8 +20,8 @@ export default function PadSwitch(props: PadSwitchProps): JSX.Element {
       <ToggleButton
         checked={value}
         onChange={onChange}
-        onLabel={`${PRE_AMP_PAD_LEVEL}dB`}
-        offLabel={`${PRE_AMP_PAD_LEVEL}dB`}
+        onLabel={`${padLevel}dB`}
+        offLabel={`${padLevel}dB`}
       />
     </Box>
   );
