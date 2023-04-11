@@ -9,11 +9,12 @@ interface PadSwitchProps {
   value: boolean;
   onChange(evt: ToggleButtonChangeEvent): void;
   padLevel?: number;
+  size?: number;
 };
 
 export default function PadSwitch(props: PadSwitchProps): JSX.Element {
-  const { value, onChange, padLevel = DEFAULT_PAD_LEVEL } = props;
-  const styles = useStyles();
+  const { value, onChange, padLevel = DEFAULT_PAD_LEVEL, size = 100 } = props;
+  const styles = useStyles(size);
 
   return (
     <Box sx={styles.root}>

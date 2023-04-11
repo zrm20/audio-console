@@ -20,7 +20,7 @@ interface BusSendProps {
 
 export default function BusSend(props: BusSendProps): JSX.Element {
   const { value, onChange, name, isPreFader, onIsPreFaderChange, size = 100 } = props;
-  const styles = useStyles();
+  const styles = useStyles(size);
   const id = `bus-${name}`;
   const sizeMultiplier = size / 100;
 

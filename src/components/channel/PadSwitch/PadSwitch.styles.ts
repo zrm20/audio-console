@@ -5,12 +5,13 @@ interface Style {
   root: SxProps;
 };
 
-export default function useStyles(): Style {
+export default function useStyles(size: number): Style {
+  const sizeMultiplier = size / 100;
 
   return {
     root: {
       '& .p-togglebutton': {
-        fontSize: LABEL_SIZE,
+        fontSize: LABEL_SIZE * sizeMultiplier,
         display: 'flex',
         flexDirection: 'column',
         p: 1 / 2

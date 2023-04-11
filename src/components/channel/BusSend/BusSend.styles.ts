@@ -5,7 +5,8 @@ interface Style {
   root: SxProps;
 };
 
-export default function useStyles(): Style {
+export default function useStyles(size: number): Style {
+  const sizeMultiplier = size / 100;
 
   return {
     root: {
@@ -14,10 +15,10 @@ export default function useStyles(): Style {
       alignItems: 'center',
       my: 1/2,
       '& .p-knob': {
-        marginBottom: -1
+        marginBottom: -1 * sizeMultiplier
       },
       '& label': {
-        fontSize: LABEL_SIZE
+        fontSize: LABEL_SIZE * sizeMultiplier
       },
       '& .p-togglebutton': {
         display: 'flex',
