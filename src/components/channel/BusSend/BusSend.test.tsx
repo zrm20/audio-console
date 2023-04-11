@@ -29,7 +29,7 @@ describe('<BusSend />', () => {
     const value = 0;
     const changeFn = jest.fn();
     const name = "testBus";
-    const preFaderChange = jest.fn();
+    const id = "testId";
 
     const valueShift = 0 - BUS_MIN_GAIN;
     const knobProps: KnobProps = {
@@ -38,7 +38,7 @@ describe('<BusSend />', () => {
       max: BUS_MAX_GAIN + valueShift,
       role: "slider",
       size: COMPONENT_SIZE,
-      id: `bus-${name}`,
+      id,
     };
     const expectedProps = expect.objectContaining(knobProps);
 
@@ -48,8 +48,8 @@ describe('<BusSend />', () => {
         value={value}
         onChange={changeFn}
         name={name}
+        id={id}
         isPreFader
-        onIsPreFaderChange={preFaderChange}
       />);
 
     // Assert
@@ -60,11 +60,19 @@ describe('<BusSend />', () => {
     // Arrange
     const value = 50;
     const changeFn = jest.fn();
-    const preFaderChange = jest.fn();
     const name = "testBus";
+    const id = "testId"
 
     // Act
-    render(<BusSend value={value} onChange={changeFn} name={name} isPreFader onIsPreFaderChange={preFaderChange} />);
+    render(
+      <BusSend
+        value={value}
+        onChange={changeFn}
+        name={name}
+        id={id}
+        isPreFader
+      />
+    );
     const nameText = screen.queryByText(name);
 
     // Assert
@@ -76,11 +84,19 @@ describe('<BusSend />', () => {
     const value = BUS_MIN_GAIN + 1;
     const changeFn = jest.fn();
     const name = "testBus";
-    const preFaderChange = jest.fn();
+    const id = 'testId';
     const expectedProps = expect.objectContaining({ valueTemplate: `${value}dB` });
 
     // Act
-    render(<BusSend value={value} onChange={changeFn} name={name} isPreFader onIsPreFaderChange={preFaderChange} />);
+    render(
+      <BusSend
+        value={value}
+        onChange={changeFn}
+        name={name}
+        id={id}
+        isPreFader
+      />
+    );
 
     // Assert
     expect(mockKnob).toHaveBeenCalledWith(expectedProps, {});
@@ -91,11 +107,19 @@ describe('<BusSend />', () => {
     const value = BUS_MAX_GAIN - 1;
     const changeFn = jest.fn();
     const name = "testBus";
-    const preFaderChange = jest.fn();
+    const id = "testId";
     const expectedProps = expect.objectContaining({ valueTemplate: `+${value}dB` });
 
     // Act
-    render(<BusSend value={value} onChange={changeFn} name={name} isPreFader onIsPreFaderChange={preFaderChange} />);
+    render(
+      <BusSend
+        value={value}
+        onChange={changeFn}
+        name={name}
+        id={id}
+        isPreFader
+      />
+    );
 
     // Assert
     expect(mockKnob).toHaveBeenCalledWith(expectedProps, {});
@@ -106,12 +130,20 @@ describe('<BusSend />', () => {
     const value = BUS_MIN_GAIN - 1;
     const changeFn = jest.fn();
     const name = "testBus";
-    const preFaderChange = jest.fn();
+    const id = "tstId";
 
     const expectedProps = expect.objectContaining({ value: 0 })
 
     // Act
-    render(<BusSend value={value} onChange={changeFn} name={name} isPreFader onIsPreFaderChange={preFaderChange} />);
+    render(
+      <BusSend
+        value={value}
+        onChange={changeFn}
+        name={name}
+        id={id}
+        isPreFader
+      />
+    );
 
     // Assert
     expect(mockKnob).toHaveBeenCalledWith(expectedProps, {});
@@ -122,14 +154,22 @@ describe('<BusSend />', () => {
     const value = BUS_MAX_GAIN + 1;
     const changeFn = jest.fn();
     const name = "testBus";
-    const preFaderChange = jest.fn();
+    const id = "testId";
 
     const valueShift = 0 - BUS_MIN_GAIN;
 
     const expectedProps = expect.objectContaining({ value: BUS_MAX_GAIN + valueShift });
 
     // Act
-    render(<BusSend value={value} onChange={changeFn} name={name} isPreFader onIsPreFaderChange={preFaderChange} />);
+    render(
+      <BusSend
+        value={value}
+        onChange={changeFn}
+        name={name}
+        isPreFader
+        id={id}
+      />
+    );
 
     // Assert
     expect(mockKnob).toHaveBeenCalledWith(expectedProps, {});
@@ -141,13 +181,13 @@ describe('<BusSend />', () => {
     const changeFn = jest.fn();
     const name = "testBus";
     const isPre = true;
-    const onPreFadeChange = jest.fn();
-    const expectedProps: ToggleButtonProps = {
+    const id = "testId";
+    const props: ToggleButtonProps = {
       checked: isPre,
-      onChange: onPreFadeChange,
       onLabel: "Pre",
       offLabel: "Pre"
     };
+    const expectedProps = expect.objectContaining(props);
 
     // Act
     render(
@@ -156,7 +196,7 @@ describe('<BusSend />', () => {
         onChange={changeFn}
         name={name}
         isPreFader={isPre}
-        onIsPreFaderChange={onPreFadeChange}
+        id={id}
       />
     );
 
@@ -170,9 +210,9 @@ describe('<BusSend />', () => {
     const changeFn = jest.fn();
     const name = "testBus";
     const isPre = true;
-    const onPreFadeChange = jest.fn();
+    const id = "testId"
 
-    const expectedProps = expect.objectContaining({ valueTemplate: '-∞'})
+    const expectedProps = expect.objectContaining({ valueTemplate: '-∞' })
 
     // Act
     render(
@@ -181,7 +221,7 @@ describe('<BusSend />', () => {
         onChange={changeFn}
         name={name}
         isPreFader={isPre}
-        onIsPreFaderChange={onPreFadeChange}
+        id={id}
       />
     );
     // Assert

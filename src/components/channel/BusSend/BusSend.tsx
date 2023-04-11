@@ -10,18 +10,18 @@ import { BUS_MAX_GAIN, BUS_MIN_GAIN } from '../../../constants/busLevels';
 import { MIN_DBFS_VALUE } from '../../../constants/audioLevels';
 
 interface BusSendProps {
+  id: string;
   value: number;
-  onChange(evt: KnobChangeEvent): void;
+  onChange(newAuxValues: AuxSend): void;
   name: string;
   isPreFader: boolean;
-  onIsPreFaderChange(evt: ToggleButtonChangeEvent): void;
   size?: number;
+  isMuted?: boolean;
 };
 
 export default function BusSend(props: BusSendProps): JSX.Element {
-  const { value, onChange, name, isPreFader, onIsPreFaderChange, size = 100 } = props;
+  const { value, onChange, name, isPreFader, size = 100, id, isMuted = false } = props;
   const styles = useStyles(size);
-  const id = `bus-${name}`;
   const sizeMultiplier = size / 100;
 
   // for correct display, all slider values should be positive
@@ -30,15 +30,33 @@ export default function BusSend(props: BusSendProps): JSX.Element {
   // example: -96 to +12 should shift to 0 to 108
   const valueShift = 0 - BUS_MIN_GAIN;
 
-  function handleChange(evt: KnobChangeEvent): void {
+  function handleSendLevelChange(evt: KnobChangeEvent): void {
     // value received from evt will be shifted based on valueShift
     // ex: a gain of +12 might be stored on evt as +108 if valueShift is +96
     // needs to shift back to receive the actual gain change;
-    const actualGainChange = evt.value - valueShift;
+    const adjustedLevel = evt.value - valueShift;
 
-    // create a new evt representing the knob change event to call with props.onChange
-    const newEvt: KnobChangeEvent = { ...evt, value: actualGainChange };
-    onChange(newEvt);
+    const newAuxValues: AuxSend = {
+      id,
+      name,
+      sendLevel: adjustedLevel,
+      isPreFader,
+      isMuted
+    };
+
+    onChange(newAuxValues);
+  };
+
+  function handlePreFaderChange(evt: ToggleButtonChangeEvent): void {
+    const newAuxValues: AuxSend = {
+      id,
+      name,
+      sendLevel: value,
+      isPreFader: evt.value,
+      isMuted
+    };
+
+    onChange(newAuxValues);
   };
 
   const constrainedValue = constrainValue(value + valueShift, 0, BUS_MAX_GAIN + valueShift);
@@ -54,10 +72,10 @@ export default function BusSend(props: BusSendProps): JSX.Element {
   };
 
   return (
-    <Box sx={styles.root} data-testid="contain">
+    <Box sx={styles.root}>
       <Knob
         value={constrainedValue}
-        onChange={handleChange}
+        onChange={handleSendLevelChange}
         role="slider"
         min={0}
         max={BUS_MAX_GAIN + valueShift}
@@ -70,7 +88,7 @@ export default function BusSend(props: BusSendProps): JSX.Element {
 
       <ToggleButton
         checked={isPreFader}
-        onChange={onIsPreFaderChange}
+        onChange={handlePreFaderChange}
         onLabel="Pre"
         offLabel="Pre"
       />
