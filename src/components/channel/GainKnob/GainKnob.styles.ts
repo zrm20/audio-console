@@ -5,14 +5,15 @@ interface Style {
   root: SxProps;
 };
 
-export default function useStyles(): Style {
+export default function useStyles(size: number): Style {
+  const sizeMultiplier = size / 100;
   return {
     root: {
       '& .p-knob': {
         marginBottom: -1.5
       },
       '& label': {
-        fontSize: LABEL_SIZE
+        fontSize: LABEL_SIZE * sizeMultiplier
       }
     },
   };

@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { Knob, KnobProps } from "primereact/knob";
-import { PRE_AMP_MAX_GAIN, PRE_AMP_MIN_GAIN, PRE_AMP_STEPS } from "../../../constants/gainValues";
+import { PRE_AMP_MAX_GAIN, PRE_AMP_MIN_GAIN } from "../../../constants/busLevels";
 import { COMPONENT_SIZE } from "../../../constants/primeReactSizes";
 
 import GainKnob from "./GainKnob";
@@ -17,24 +17,26 @@ describe('<GainKnob />', () => {
 
   it("should render a Knob component with correct props", () => {
     // Arrange
-    const value = 12;
+    const value = PRE_AMP_MIN_GAIN + 1;
     const changeFn = jest.fn();
-    const expectedProps: KnobProps = {
+    const size = 90;
+    const props: KnobProps = {
       value,
       onChange: changeFn,
-      size: COMPONENT_SIZE,
+      size: COMPONENT_SIZE * (size / 100),
       min: PRE_AMP_MIN_GAIN,
       max: PRE_AMP_MAX_GAIN,
-      step: PRE_AMP_STEPS,
+      step: 1,
       role: "slider"
     };
+    const expectedProps = expect.objectContaining(props);
 
 
     // Act
-    render(<GainKnob value={value} onChange={changeFn} />);
+    render(<GainKnob value={value} onChange={changeFn} size={size} />);
 
     // Assert
-    expect(Knob).toHaveBeenCalledWith(expect.objectContaining(expectedProps), {});
+    expect(Knob).toHaveBeenCalledWith(expectedProps, {});
   });
 
   it("should set value to min constant if value is under min pre amp level", () => {
