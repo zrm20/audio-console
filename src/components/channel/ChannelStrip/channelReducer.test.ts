@@ -9,6 +9,7 @@ describe('channelReducer(state, action)', () => {
     preAmpGain: PRE_AMP_MIN_GAIN,
     auxSends: [],
     faderLevel: 0,
+    groupOuts: []
   };
 
   let state: ChannelState | undefined;
@@ -155,6 +156,31 @@ describe('channelReducer(state, action)', () => {
 
     // Assert
     expect(result).toEqual(state);
+  });
+
+  it('should add a groupId when action ASSIGN_GROUP is called', () => {
+    // Arrange
+    const groupToAdd = 'test';
+    const action: ChannelAction = { type: 'ASSIGN_GROUP', payload: groupToAdd };
+
+    // Act
+    const result = channelReducer(state!, action);
+
+    // Assert
+    expect(result.groupOuts).toContain(groupToAdd);
+  });
+
+  it('should remove a groupId when action UNASSIGN_GROUP is called', () => {
+    // Arrange
+    const groupToRemove = 'test';
+    state!.groupOuts = [groupToRemove];
+    const action: ChannelAction = { type: 'UNASSIGN_GROUP', payload: groupToRemove };
+
+    // Act
+    const result = channelReducer(state!, action);
+
+    // Assert
+    expect(result.groupOuts).not.toContain(groupToRemove);
   });
 
   it('should throw error if unhandled action type is passed', () => {

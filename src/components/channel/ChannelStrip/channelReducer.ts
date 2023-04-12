@@ -35,6 +35,14 @@ const channelReducer: Reducer<ChannelState, ChannelAction> = (state, action) => 
       // return new state with updated array
       return { ...state, auxSends: auxesCopy };
     }
+    case 'ASSIGN_GROUP': {
+      const newGroupArray = [...state.groupOuts, action.payload];
+      return { ...state, groupOuts: newGroupArray}
+    }
+    case 'UNASSIGN_GROUP': {
+      const newGroupArray = state.groupOuts.filter(el => el !== action.payload);
+      return { ...state, groupOuts: newGroupArray}
+    }
     default:
       throw new Error(`Unhandled action type: ${action}`);
   };

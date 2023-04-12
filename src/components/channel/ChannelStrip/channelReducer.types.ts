@@ -2,6 +2,7 @@ export interface ChannelState {
   isPadded: boolean;
   preAmpGain: number;
   auxSends: AuxSend[];
+  groupOuts: string[];
   faderLevel: number;
   isMuted: boolean;
 }
@@ -13,3 +14,5 @@ export type ChannelAction =
 | { type: 'SET_FADER', payload: number }
 | { type: 'SET_AUX_SENDS', payload: AuxSend[] }
 | { type: 'SET_AUX', payload: AuxSend }
+| { type: 'ASSIGN_GROUP', payload: string }
+| { type: 'UNASSIGN_GROUP', payload: string }
