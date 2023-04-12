@@ -14,5 +14,4 @@ export type ChannelAction =
 | { type: 'SET_FADER', payload: number }
 | { type: 'SET_AUX_SENDS', payload: AuxSend[] }
 | { type: 'SET_AUX', payload: AuxSend }
-| { type: 'ASSIGN_GROUP', payload: string }
-| { type: 'UNASSIGN_GROUP', payload: string }
+| { type: 'TOGGLE_GROUP_ASSIGNMENT', payload: string }

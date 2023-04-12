@@ -158,10 +158,10 @@ describe('channelReducer(state, action)', () => {
     expect(result).toEqual(state);
   });
 
-  it('should add a groupId when action ASSIGN_GROUP is called', () => {
+  it('should add a groupId when action TOGGLE_GROUP_ASSIGNMENT is called and value is not in array', () => {
     // Arrange
     const groupToAdd = 'test';
-    const action: ChannelAction = { type: 'ASSIGN_GROUP', payload: groupToAdd };
+    const action: ChannelAction = { type: 'TOGGLE_GROUP_ASSIGNMENT', payload: groupToAdd };
 
     // Act
     const result = channelReducer(state!, action);
@@ -170,17 +170,19 @@ describe('channelReducer(state, action)', () => {
     expect(result.groupOuts).toContain(groupToAdd);
   });
 
-  it('should remove a groupId when action UNASSIGN_GROUP is called', () => {
+  it('should remove a groupId when action TOGGLE_GROUP_ASSIGNMENT is called and value is in array', () => {
     // Arrange
     const groupToRemove = 'test';
-    state!.groupOuts = [groupToRemove];
-    const action: ChannelAction = { type: 'UNASSIGN_GROUP', payload: groupToRemove };
+    const shouldNotRemove = 'dontremove';
+    state!.groupOuts = [groupToRemove, shouldNotRemove];
+    const action: ChannelAction = { type: 'TOGGLE_GROUP_ASSIGNMENT', payload: groupToRemove };
 
     // Act
     const result = channelReducer(state!, action);
 
     // Assert
     expect(result.groupOuts).not.toContain(groupToRemove);
+    expect(result.groupOuts).toContain(shouldNotRemove);
   });
 
   it('should throw error if unhandled action type is passed', () => {
