@@ -4,6 +4,7 @@ import applyGain from "./applyGain/applyGain";
 import dbToAmplitude from "./dbToAmplitude/dbToAmplitude";
 import applyDbGainToAmplitude from "./applyDbGainToAmplitude/applyDbGainToAmplitude";
 import convertDbToPercentage from "./convertDbToPercentage/convertDbToPercentage";
+import sumSignals from "./sumSignals/sumSignals";
 
 export {
   constrainValue,
@@ -11,5 +12,6 @@ export {
   applyGain,
   dbToAmplitude,
   amplitudeToDb,
-  convertDbToPercentage
+  convertDbToPercentage,
+  sumSignals
 };
