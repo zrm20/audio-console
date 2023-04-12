@@ -16,7 +16,7 @@ describe('sumSignals()', () => {
     expect(objResult).toBe(MIN_DBFS_VALUE);
   });
 
-  it('should sum the signals within +/-1dB', () => {
+  it('should sum the signals within +-1dB', () => {
     // Arrange
     const inputVal = -24;
     const expectedSum = inputVal + 6;
@@ -31,7 +31,7 @@ describe('sumSignals()', () => {
     const objResult = sumSignals(objInput);
 
     // Assert
-    expect(Math.round(numResult)).toBe(expectedSum);
-    expect(Math.round(objResult)).toBe(expectedSum);
+    expect(numResult).toBe(expectedSum);
+    expect(objResult).toBe(expectedSum);
   });
 });

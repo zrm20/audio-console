@@ -31,5 +31,5 @@ export default function sumSignals(signals: number[] | ChannelGroupOutput[]): nu
 
   // amplitude represented by dBfs
   const totalDb = 20 * Math.log10(summedAmplitude);
-  return totalDb;
+  return Math.round(totalDb);
 };
