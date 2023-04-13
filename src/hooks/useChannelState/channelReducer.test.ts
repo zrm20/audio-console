@@ -1,4 +1,4 @@
-import { PRE_AMP_MIN_GAIN } from "../../../constants/busLevels";
+import { PRE_AMP_MIN_GAIN } from "../../constants/busLevels";
 import channelReducer from "./channelReducer";
 import { ChannelAction, ChannelState } from "./channelReducer.types";
 
@@ -7,7 +7,6 @@ describe('channelReducer(state, action)', () => {
     isMuted: false,
     isPadded: false,
     preAmpGain: PRE_AMP_MIN_GAIN,
-    auxSends: [],
     faderLevel: 0,
     groupOuts: []
   };
@@ -76,86 +75,6 @@ describe('channelReducer(state, action)', () => {
 
     // Assert
     expect(result).toEqual({ ...state, faderLevel: newFaderLevel });
-  });
-
-  it('should return new auxSends value for action: SET_AUX_SENDS', () => {
-    // Arrange
-    const newAuxLevels: AuxSend[] = [
-      { id: '1', name: "Aux 1", isPreFader: true, sendLevel: -10, isMuted: false }
-    ];
-    const action: ChannelAction = {
-      type: "SET_AUX_SENDS",
-      payload: newAuxLevels
-    };
-
-    // Act
-    const result = channelReducer(state!, action);
-
-    // Assert
-    expect(result).toEqual({ ...state, auxSends: newAuxLevels });
-  });
-  
-  it('should return replaced individual aux send for action SET_AUX_SEND', () => {
-    // Arrange
-    const aux1: AuxSend = { 
-      id: 'aux1', 
-      name: "Aux 1", 
-      isPreFader: true, 
-      sendLevel: -10, 
-      isMuted: false 
-    };
-
-    state!.auxSends = [aux1];
-
-    const newAux1: AuxSend = {
-      ...aux1,
-      isPreFader: !aux1.isPreFader,
-      isMuted: !aux1.isMuted,
-      sendLevel: aux1.sendLevel + 1
-    };
-
-    const action: ChannelAction = {
-      type: "SET_AUX",
-      payload: newAux1
-    };
-
-    // Act
-    const result = channelReducer(state!, action);
-
-    // Assert
-    expect(result.auxSends).toEqual([newAux1]);
-  });
-  
-  it('should return prevState if Aux id is not found for action SET_AUX_SEND', () => {
-    // Arrange
-    const aux1: AuxSend = { 
-      id: 'aux1', 
-      name: "Aux 1", 
-      isPreFader: true, 
-      sendLevel: -10, 
-      isMuted: false 
-    };
-
-    state!.auxSends = [aux1];
-
-    const newAux1: AuxSend = {
-      ...aux1,
-      id: 'wrong_id',
-      isPreFader: !aux1.isPreFader,
-      isMuted: !aux1.isMuted,
-      sendLevel: aux1.sendLevel + 1
-    };
-
-    const action: ChannelAction = {
-      type: "SET_AUX",
-      payload: newAux1
-    };
-
-    // Act
-    const result = channelReducer(state!, action);
-
-    // Assert
-    expect(result).toEqual(state);
   });
 
   it('should add a groupId when action TOGGLE_GROUP_ASSIGNMENT is called and value is not in array', () => {
