@@ -16,7 +16,7 @@ interface MeterProps {
 
 type MeterColor = "green" | "yellow" | "red"
 
-export default function Meter(props: MeterProps): JSX.Element {
+function Meter(props: MeterProps): JSX.Element {
   const { signalLevel, nominalLevel = DBFS_NOMINAL, size = 100, title } = props;
   const styles = useStyles(size);
 
@@ -49,3 +49,5 @@ export default function Meter(props: MeterProps): JSX.Element {
     </Box>
   );
 };
+
+export default React.memo(Meter);

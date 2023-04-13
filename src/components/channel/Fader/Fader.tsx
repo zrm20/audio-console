@@ -12,7 +12,7 @@ interface FaderProps {
   size?: number;
 };
 
-export default function Fader(props: FaderProps): JSX.Element {
+function Fader(props: FaderProps): JSX.Element {
   const { value, onChange, size=100 } = props;
   const styles = useStyles(size);
 
@@ -33,3 +33,5 @@ export default function Fader(props: FaderProps): JSX.Element {
     </Box>
   );
 };
+
+export default React.memo(Fader);

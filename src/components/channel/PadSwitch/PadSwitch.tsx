@@ -12,7 +12,7 @@ interface PadSwitchProps {
   size?: number;
 };
 
-export default function PadSwitch(props: PadSwitchProps): JSX.Element {
+function PadSwitch(props: PadSwitchProps): JSX.Element {
   const { value, onChange, padLevel = DEFAULT_PAD_LEVEL, size = 100 } = props;
   const styles = useStyles(size);
 
@@ -27,3 +27,5 @@ export default function PadSwitch(props: PadSwitchProps): JSX.Element {
     </Box>
   );
 };
+
+export default React.memo(PadSwitch);

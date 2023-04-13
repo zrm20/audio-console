@@ -9,8 +9,7 @@ interface MuteButtonProps {
   value: boolean;
   onChange(evt: ToggleButtonChangeEvent): void;
 };
-
-export default function MuteButton(props: MuteButtonProps): JSX.Element {
+function MuteButton(props: MuteButtonProps): JSX.Element {
   const { size = 100, value, onChange } = props;
   const styles = useStyles(size);
 
@@ -31,3 +30,5 @@ export default function MuteButton(props: MuteButtonProps): JSX.Element {
     </Box>
   );
 };
+
+export default React.memo(MuteButton);

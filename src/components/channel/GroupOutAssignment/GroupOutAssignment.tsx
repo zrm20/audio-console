@@ -11,7 +11,7 @@ interface GroupOutAssignmentProps {
   size?: number;
 };
 
-export default function GroupOutAssignment(props: GroupOutAssignmentProps): JSX.Element {
+function GroupOutAssignment(props: GroupOutAssignmentProps): JSX.Element {
   const { groups, value, onChange, size = 100 } = props;
   const styles = useStyles(size);
 
@@ -34,3 +34,5 @@ export default function GroupOutAssignment(props: GroupOutAssignmentProps): JSX.
     </Box>
   );
 };
+
+export default React.memo(GroupOutAssignment);

@@ -12,8 +12,7 @@ interface GainKnobProps {
   onChange(evt: KnobChangeEvent): void;
   size?: number;
 };
-
-export default function GainKnob(props: GainKnobProps): JSX.Element {
+function GainKnob(props: GainKnobProps): JSX.Element {
   const { value, onChange, size = 100 } = props;
   const styles = useStyles(size);
   const sizeMultiplier = size / 100;
@@ -34,3 +33,5 @@ export default function GainKnob(props: GainKnobProps): JSX.Element {
     </Box>
   );
 };
+
+export default React.memo(GainKnob);
