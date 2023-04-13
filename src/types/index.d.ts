@@ -1,20 +1,30 @@
-interface ConsoleBus {
+interface ConsoleBusInitializer {
   id: string;
   name: string;
 }
 
-interface AuxSend extends ConsoleBus {
+interface ConsoleBus extends ConsoleBusInitializer {
+  sources: number[];
+}
+
+interface AuxSend extends ConsoleBusInitializer {
   isPreFader: boolean;
   isMuted: boolean;
   sendLevel: number;
 }
 
-interface ChannelAuxOutput {
+interface ChannelAuxOutput { // TODO Delete this
   id: string
   value: number
 }
 
-interface ChannelGroupOutput {
+interface ChannelGroupOutput { // TODO Delete this
   id: string,
+  value: number
+}
+
+interface ChannelBusOut {
+  sourceId: string;
+  destinationId: string;
   value: number
 }
