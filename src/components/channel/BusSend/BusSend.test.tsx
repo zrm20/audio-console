@@ -18,6 +18,8 @@ jest.mock('primereact/togglebutton', () => ({
 describe('<BusSend />', () => {
   let mockKnob = Knob as jest.Mock;
   let mockToggleButton = ToggleButton as jest.Mock;
+  const valueOffset = 0 - BUS_MIN_GAIN;
+  const busOffsetMax = BUS_MAX_GAIN + valueOffset;
 
   beforeEach(() => {
     mockKnob.mockReset();
@@ -26,30 +28,28 @@ describe('<BusSend />', () => {
 
   it("should render a knob with correct props", () => {
     // Arrange
-    const value = 0;
-    const changeFn = jest.fn();
-    const name = "testBus";
-    const id = "testId";
+    const requiredInputProps = {
+      id: "test",
+      name: "Test",
+      preFaderInput: -12,
+      postFaderInput: -24,
+    };
 
-    const valueShift = 0 - BUS_MIN_GAIN;
     const knobProps: KnobProps = {
-      value: value + valueShift,
-      min: 0,
-      max: BUS_MAX_GAIN + valueShift,
+      value: 0,
       role: "slider",
+      min: 0,
+      max: busOffsetMax,
+      step: 1,
       size: COMPONENT_SIZE,
-      id,
+      id: requiredInputProps.id
     };
     const expectedProps = expect.objectContaining(knobProps);
 
     // Act
     render(
       <BusSend
-        value={value}
-        onChange={changeFn}
-        name={name}
-        id={id}
-        isPreFader
+        {...requiredInputProps}
       />);
 
     // Assert
@@ -58,174 +58,49 @@ describe('<BusSend />', () => {
 
   it("should render a bus name", () => {
     // Arrange
-    const value = 50;
-    const changeFn = jest.fn();
-    const name = "testBus";
-    const id = "testId"
+    const requiredInputProps = {
+      id: "test",
+      name: "Test",
+      preFaderInput: -12,
+      postFaderInput: -24,
+    };
 
     // Act
     render(
       <BusSend
-        value={value}
-        onChange={changeFn}
-        name={name}
-        id={id}
-        isPreFader
+        {...requiredInputProps}
       />
     );
-    const nameText = screen.queryByText(name);
+    const nameText = screen.queryByText(requiredInputProps.name);
 
     // Assert
     expect(nameText).not.toBeNull();
   });
 
-  it("should render a value label", () => {
+  it("should render a ToggleButton with correct props, initial state of false", () => {
     // Arrange
-    const value = BUS_MIN_GAIN + 1;
-    const changeFn = jest.fn();
-    const name = "testBus";
-    const id = 'testId';
-    const expectedProps = expect.objectContaining({ valueTemplate: `${value}dB` });
+    const requiredInputProps = {
+      id: "test",
+      name: "Test",
+      preFaderInput: -12,
+      postFaderInput: -24,
+    };
 
-    // Act
-    render(
-      <BusSend
-        value={value}
-        onChange={changeFn}
-        name={name}
-        id={id}
-        isPreFader
-      />
-    );
-
-    // Assert
-    expect(mockKnob).toHaveBeenCalledWith(expectedProps, {});
-  });
-
-  it("should render a value label with a + for positive gain value", () => {
-    // Arrange
-    const value = BUS_MAX_GAIN - 1;
-    const changeFn = jest.fn();
-    const name = "testBus";
-    const id = "testId";
-    const expectedProps = expect.objectContaining({ valueTemplate: `+${value}dB` });
-
-    // Act
-    render(
-      <BusSend
-        value={value}
-        onChange={changeFn}
-        name={name}
-        id={id}
-        isPreFader
-      />
-    );
-
-    // Assert
-    expect(mockKnob).toHaveBeenCalledWith(expectedProps, {});
-  });
-
-  it("should have a value of 0 if value props is under BUS_MIN", () => {
-    // Arrange
-    const value = BUS_MIN_GAIN - 1;
-    const changeFn = jest.fn();
-    const name = "testBus";
-    const id = "tstId";
-
-    const expectedProps = expect.objectContaining({ value: 0 })
-
-    // Act
-    render(
-      <BusSend
-        value={value}
-        onChange={changeFn}
-        name={name}
-        id={id}
-        isPreFader
-      />
-    );
-
-    // Assert
-    expect(mockKnob).toHaveBeenCalledWith(expectedProps, {});
-  });
-
-  it("should have a value of BUS_MAX_GAIN if value props is above shifted max gain", () => {
-    // Arrange
-    const value = BUS_MAX_GAIN + 1;
-    const changeFn = jest.fn();
-    const name = "testBus";
-    const id = "testId";
-
-    const valueShift = 0 - BUS_MIN_GAIN;
-
-    const expectedProps = expect.objectContaining({ value: BUS_MAX_GAIN + valueShift });
-
-    // Act
-    render(
-      <BusSend
-        value={value}
-        onChange={changeFn}
-        name={name}
-        isPreFader
-        id={id}
-      />
-    );
-
-    // Assert
-    expect(mockKnob).toHaveBeenCalledWith(expectedProps, {});
-  });
-
-  it("should render a ToggleButton with correct props", () => {
-    // Arrange
-    const value = 0;
-    const changeFn = jest.fn();
-    const name = "testBus";
-    const isPre = true;
-    const id = "testId";
     const props: ToggleButtonProps = {
-      checked: isPre,
       onLabel: "Pre",
-      offLabel: "Pre"
+      offLabel: "Pre",
+      checked: false
     };
     const expectedProps = expect.objectContaining(props);
 
     // Act
     render(
       <BusSend
-        value={value}
-        onChange={changeFn}
-        name={name}
-        isPreFader={isPre}
-        id={id}
+        {...requiredInputProps}
       />
     );
 
     // Assert
     expect(mockToggleButton).toHaveBeenCalledWith(expectedProps, {});
-  });
-
-  it("should show label of -∞ if value is MIN_DBFS_VALUE", () => {
-    // Arrange
-    const value = MIN_DBFS_VALUE;
-    const changeFn = jest.fn();
-    const name = "testBus";
-    const isPre = true;
-    const id = "testId"
-
-    const expectedProps = expect.objectContaining({ valueTemplate: '-∞' })
-
-    // Act
-    render(
-      <BusSend
-        value={value}
-        onChange={changeFn}
-        name={name}
-        isPreFader={isPre}
-        id={id}
-      />
-    );
-    // Assert
-    expect(mockKnob).toHaveBeenCalledWith(expectedProps, {});
-
   });
 });
