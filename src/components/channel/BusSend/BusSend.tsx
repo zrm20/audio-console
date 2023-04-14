@@ -10,9 +10,11 @@ import { BUS_MAX_GAIN, BUS_MIN_GAIN } from '../../../constants/busLevels';
 interface BusSendProps {
   id: string;
   name: string;
-  preFaderInput: number;
-  postFaderInput: number;
+  preFaderInput: number; // in dBfs
+  postFaderInput: number; // in dBfs
   size?: number;
+  initialSendLevel?: number; // in dBfs
+  initialPreFader?: boolean;
 };
 
 function BusSend(props: BusSendProps): JSX.Element {
@@ -25,8 +27,9 @@ function BusSend(props: BusSendProps): JSX.Element {
   const valueOffset = 0 - BUS_MIN_GAIN;
 
   // state
-  const [sendLevel, setSendLevel] = useState<number>(0); // will be 0 - MAX
-  const [isPreFader, setIsPreFader] = useState<boolean>(false);
+  const initialSendLevel = props.initialSendLevel ? props.initialSendLevel + valueOffset : 0;
+  const [sendLevel, setSendLevel] = useState<number>(initialSendLevel); // will be 0 - MAX
+  const [isPreFader, setIsPreFader] = useState<boolean>(props.initialPreFader || false);
 
   // get actual gain value from shifting back down to negative range
   const gainValue = sendLevel - valueOffset;

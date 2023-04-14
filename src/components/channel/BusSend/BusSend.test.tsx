@@ -67,9 +67,7 @@ describe('<BusSend />', () => {
 
     // Act
     render(
-      <BusSend
-        {...requiredInputProps}
-      />
+      <BusSend {...requiredInputProps} />
     );
     const nameText = screen.queryByText(requiredInputProps.name);
 
@@ -94,13 +92,85 @@ describe('<BusSend />', () => {
     const expectedProps = expect.objectContaining(props);
 
     // Act
-    render(
-      <BusSend
-        {...requiredInputProps}
-      />
-    );
+    render(<BusSend {...requiredInputProps} />);
 
     // Assert
     expect(mockToggleButton).toHaveBeenCalledWith(expectedProps, {});
+  });
+
+  it("should pass initialSendLevel value to useState", () => {
+    // Arrange
+    const requiredInputProps = {
+      id: "test",
+      name: "Test",
+      preFaderInput: -12,
+      postFaderInput: -24,
+    };
+    const initialSendLevel = BUS_MIN_GAIN + 1;
+    const expectedKnobValue = initialSendLevel + valueOffset;
+
+    // Act
+    render(<BusSend {...requiredInputProps} initialSendLevel={initialSendLevel} />);
+
+    // Assert
+    expect(mockKnob).toHaveBeenCalledWith(
+      expect.objectContaining({ value: expectedKnobValue }),
+      {}
+    );
+  });
+
+  it("should pass initialPreFader to useState", () => {
+    // Arrange
+    const requiredInputProps = {
+      id: "test",
+      name: "Test",
+      preFaderInput: -12,
+      postFaderInput: -24,
+    };
+
+    // Act
+    render(<BusSend {...requiredInputProps} initialPreFader />);
+
+    // Assert
+    expect(mockToggleButton).toHaveBeenCalledWith(
+      expect.objectContaining({ checked: true }),
+      {}
+    );
+  });
+
+  it("should show a sendValue label", () => {
+    // Arrange
+    const requiredInputProps = {
+      id: "test",
+      name: "Test",
+      preFaderInput: -12,
+      postFaderInput: -24,
+    };
+    const initialSendLevel = -12;
+    const expectedProps = expect.objectContaining({ valueTemplate: `${initialSendLevel}dB`})
+
+    // Act
+    render(<BusSend {...requiredInputProps} initialSendLevel={initialSendLevel}/>);
+
+    // Assert
+    expect(mockKnob).toHaveBeenCalledWith(expectedProps, {});
+  });
+
+  it("should show a sendValue label with + value for sendLevel above 0", () => {
+    // Arrange
+    const requiredInputProps = {
+      id: "test",
+      name: "Test",
+      preFaderInput: -12,
+      postFaderInput: -24,
+    };
+    const initialSendLevel = 6;
+    const expectedProps = expect.objectContaining({ valueTemplate: `+${initialSendLevel}dB`})
+
+    // Act
+    render(<BusSend {...requiredInputProps} initialSendLevel={initialSendLevel}/>);
+
+    // Assert
+    expect(mockKnob).toHaveBeenCalledWith(expectedProps, {});
   });
 });
