@@ -21,7 +21,6 @@ function BusSend(props: BusSendProps): JSX.Element {
   const { name, size = 100, id } = props;
   const styles = useStyles(size);
   const sizeMultiplier = size / 100;
-  console.log('rendering send')
 
   // shift the bus gain values into positive range
   const valueOffset = 0 - BUS_MIN_GAIN;
