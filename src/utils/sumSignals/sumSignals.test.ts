@@ -5,7 +5,7 @@ describe('sumSignals()', () => {
   it('should return MIN_DBFS if empty array is passed', () => {
     // Arrange
     const numInput: number[] = [];
-    const objInput: ChannelGroupOutput[] = [];
+    const objInput: ChannelBusOut[] = [];
 
     // Act
     const numResult = sumSignals(numInput);
@@ -21,9 +21,9 @@ describe('sumSignals()', () => {
     const inputVal = -24;
     const expectedSum = inputVal + 6;
     const numInput: number[] = [inputVal, inputVal];
-    const objInput: ChannelGroupOutput[] = [
-      { id: '1', value: inputVal },
-      { id: '2', value: inputVal },
+    const objInput: ChannelBusOut[] = [
+      { sourceId: "a", destinationId: '1', value: inputVal },
+      { sourceId: "a", destinationId: '2', value: inputVal },
     ];
 
     // Act

@@ -6,7 +6,7 @@
 
 import { MIN_DBFS_VALUE } from "../../constants/audioLevels";
 
-export default function sumSignals(signals: number[] | ChannelGroupOutput[]): number {
+export default function sumSignals(signals: number[] | ChannelBusOut[]): number {
   if (signals.length === 0) {
     return MIN_DBFS_VALUE;
   };
@@ -18,7 +18,7 @@ export default function sumSignals(signals: number[] | ChannelGroupOutput[]): nu
   } else {
     linearValues = signals.map(el => {
       // obtain the amplitude (linear audio value)
-      const { value } = el as ChannelGroupOutput;
+      const { value } = el as ChannelBusOut;
       return Math.pow(10, value / 20);
     });
   };
