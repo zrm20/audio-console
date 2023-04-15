@@ -11,6 +11,10 @@ describe("consoleReducer()", () => {
       { id: 'group1', name: 'Group 1' },
       { id: 'group2', name: 'Group 2' },
     ],
+    channels: [
+      { id: 'chan1', name: 'Chan 1'},
+      { id: 'chan2', name: 'Chan 2'},
+    ],
     sources: [],
   };
   let state: ConsoleState;

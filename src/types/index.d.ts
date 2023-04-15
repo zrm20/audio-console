@@ -17,11 +17,13 @@ interface ChannelBusOut {
 interface ConsoleStateConfig {
   auxes: ConsoleBusInitializer[];
   groups: ConsoleBusInitializer[];
+  channels: ConsoleBusInitializer[];
   sources?: ChannelBusOut[];
 }
 
 interface ConsoleState {
-  auxes: ConsoleBus[],
-  groups: ConsoleBus[],
+  auxes: ConsoleBus[];
+  groups: ConsoleBus[];
+  channels: ConsoleBusInitializer[];
   sources: ChannelBusOut[];
 }
