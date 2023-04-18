@@ -3,19 +3,24 @@ import consoleReducer, { ConsoleStateAction } from "./consoleReducer";
 
 describe("consoleReducer()", () => {
   let initialState: ConsoleState = {
-    auxes: [
-      { id: 'aux1', name: 'Aux 1' },
-      { id: 'aux2', name: 'Aux 2' },
-    ],
-    groups: [
-      { id: 'group1', name: 'Group 1' },
-      { id: 'group2', name: 'Group 2' },
-    ],
-    channels: [
-      { id: 'chan1', name: 'Chan 1'},
-      { id: 'chan2', name: 'Chan 2'},
-    ],
-    sources: [],
+    busses:  {
+      aux1: {
+        name: "Aux 1",
+        sources: { }
+      },
+      aux2: {
+        name: "Aux 2",
+        sources: { }
+      },
+      main: {
+        name: "Main",
+        sources: {}
+      },
+      mono: {
+        name: "Mono",
+        sources: {}
+      }
+    },
   };
   let state: ConsoleState;
   
@@ -41,40 +46,46 @@ describe("consoleReducer()", () => {
       const result = consoleReducer(state, action);
   
       // Assert
-      expect(result.sources).toHaveLength(1);
-      expect(result.sources).toContain(newBusOutValue);
+      expect(
+        result
+          .busses[newBusOutValue.destinationId]
+          .sources[newBusOutValue.sourceId]
+      ).toBe(newBusOutValue.value);
     });
   
     it("should update a sources value if sourceId and destinationId already exist", () => {
       // Arrange
-      const originalSource: ChannelBusOut = { sourceId: "chan1", destinationId: "aux1", value: -24 };
-      const newSource: ChannelBusOut = { ...originalSource, value: originalSource.value + 1 };
-      state.sources = [originalSource];
-  
-      const action: ConsoleStateAction = { type: "UPDATE_CHANNEL_BUS_OUT", payload: newSource };
+      const newValue: ChannelBusOut = { sourceId: 'ch1', destinationId: 'aux1', value: -12 }
+
+      // set state to a value different from the new value
+      state.busses[newValue.destinationId].sources[newValue.sourceId] = newValue.value - 1;
+     
+      const action: ConsoleStateAction = { type: "UPDATE_CHANNEL_BUS_OUT", payload: newValue };
   
       // Act
       const result = consoleReducer(state, action);
   
       // Assert
-      expect(result.sources).not.toContain(originalSource);
-      expect(result.sources).toContain(newSource);
+      expect(
+        result.busses[newValue.destinationId]
+          .sources[newValue.sourceId]
+      ).toBe(newValue.value);
     });
   
     it("should remove a source if new value is DBFS_MIN or less", () => {
       // Arrange
       const sourceId = "chan1";
       const destinationId = "aux1"; 
-      state.sources = [{ sourceId, destinationId, value: 0 }];
+      state.busses[destinationId].sources[sourceId] = 0;
+
       const newSource = { sourceId, destinationId, value: MIN_DBFS_VALUE }
       const action: ConsoleStateAction = { type: "UPDATE_CHANNEL_BUS_OUT", payload: newSource };
   
       // Act
       const result = consoleReducer(state, action);
-      const foundSource = result.sources.find(src => src.sourceId === sourceId && src.destinationId === destinationId)
   
       // Assert
-      expect(foundSource).toBeUndefined();
+      expect(result.busses[destinationId].sources).not.toHaveProperty(sourceId);
     });
   });
 });

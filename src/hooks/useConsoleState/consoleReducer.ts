@@ -7,30 +7,26 @@ export type ConsoleStateAction =
 const consoleReducer: Reducer<ConsoleState, ConsoleStateAction> = (state, action) => {
   switch (action.type) {
     case "UPDATE_CHANNEL_BUS_OUT": {
-      // create a new bus out object
-      const newBusOutput: ChannelBusOut = action.payload;
+      // make a copy of state to mutate
+      const newState = { ...state };
 
-      // create a copy of sources array
-      const newSources: ChannelBusOut[] = [...state.sources];
+      // construct new ChannelBusOutput
+      const busOutput = action.payload;
 
-      const indexToUpdate = newSources.findIndex(src => src.sourceId === newBusOutput.sourceId && src.destinationId === newBusOutput.destinationId);
-
-      // if there is no matching bus output already, add it to the array and return
-      if (indexToUpdate === -1) {
-        newSources.push(newBusOutput);
-        return { ...state, sources: newSources };
+      // check if new value is above minimum
+      if(busOutput.value <= MIN_DBFS_VALUE) {
+        // if value is below min, delete it from state
+        delete newState
+          .busses[busOutput.destinationId]
+          .sources[busOutput.sourceId];
+      } else {
+        // set new value
+        newState
+          .busses[busOutput.destinationId]
+          .sources[busOutput.sourceId] =  busOutput.value;
       }
-
-      // if the new value is under DBFS_MIN remove it
-      if(newBusOutput.value <= MIN_DBFS_VALUE) {
-        const filteredSources = newSources.filter((src, i) => i !== indexToUpdate);
-        return { ...state, sources: filteredSources }
-      };
-
-      // if there is existing bus output, update it
-      newSources[indexToUpdate] = newBusOutput;
-
-      return { ...state, sources: newSources };
+      // return new state
+      return newState;
     }
     default: return state
   };
