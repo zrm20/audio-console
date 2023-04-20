@@ -4,14 +4,20 @@ interface ConsoleBusInitializer {
   name: string;
 }
 
-// the actual bus data with sources added
-interface ConsoleBus extends ConsoleBusInitializer {}
-
 // the value to be sent from a channel to a bus
 interface ChannelBusOut {
   sourceId: string;
   destinationId: string;
   value: number
+}
+
+interface ConsoleBusSources {
+  [sourceId: string]: number;
+}
+
+interface ConsoleBus {
+  name: string;
+  sources: ConsoleBusSources
 }
 
 interface ConsoleStateConfig {
@@ -22,8 +28,13 @@ interface ConsoleStateConfig {
 }
 
 interface ConsoleState {
-  auxes: ConsoleBus[];
-  groups: ConsoleBus[];
-  channels: ConsoleBusInitializer[];
-  sources: ChannelBusOut[];
+  busses: {
+    [index: string]: {
+      name: string;
+      sources: {
+        [index: string]: number;
+      }
+    }
+  }
 }
+

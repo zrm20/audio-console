@@ -7,6 +7,7 @@ interface Style {
   auxMasterContainer: SxProps;
   groupMasterContainer: SxProps;
   masterChannels: SxProps;
+  globalSection: SxProps;
 };
 
 export default function useStyles(): Style {
@@ -28,20 +29,24 @@ export default function useStyles(): Style {
       p: 1 / 2,
       display: 'flex',
       flexDirection: 'column',
+      alignItems: 'center',
       '& img': {
         width: 200
       }
     },
     masterChannels: {
-      flex: 1,
       display: 'flex',
     },
     auxMasterContainer: {
-      border: 1,
-      flex: 1
+      display: 'flex'
     },
     groupMasterContainer: {
-      border: 1,
+      display: 'flex',
     },
+    globalSection: {
+      flex: 1,
+      display: 'flex',
+      alignItems: 'center'
+    }
   };
 };

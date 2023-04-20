@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box } from '@mui/material';
 import { Knob, KnobChangeEvent } from 'primereact/knob';
 import { ToggleButton, ToggleButtonChangeEvent } from 'primereact/togglebutton';
@@ -6,6 +6,7 @@ import { ToggleButton, ToggleButtonChangeEvent } from 'primereact/togglebutton';
 import { COMPONENT_SIZE } from '../../../constants/primeReactSizes';
 import useStyles from './BusSend.styles';
 import { BUS_MAX_GAIN, BUS_MIN_GAIN } from '../../../constants/busLevels';
+import { useConsoleDispatch} from '../../../hooks/useConsoleContext/useConsoleContext';
 
 interface BusSendProps {
   id: string;
@@ -18,7 +19,7 @@ interface BusSendProps {
 };
 
 function BusSend(props: BusSendProps): JSX.Element {
-  const { name, size = 100, id } = props;
+  const { name, size = 100, id, preFaderInput, postFaderInput } = props;
   const styles = useStyles(size);
   const sizeMultiplier = size / 100;
 
@@ -27,19 +28,33 @@ function BusSend(props: BusSendProps): JSX.Element {
 
   // state
   const initialSendLevel = props.initialSendLevel ? props.initialSendLevel + valueOffset : 0;
-  const [sendLevel, setSendLevel] = useState<number>(initialSendLevel); // will be 0 - MAX
+  const [sendLevel, setSendLevel] = useState<number>(0); // will be 0 - MAX
   const [isPreFader, setIsPreFader] = useState<boolean>(props.initialPreFader || false);
+  const handleChange = useConsoleDispatch();
+
 
   // get actual gain value from shifting back down to negative range
   const gainValue = sendLevel - valueOffset;
-  
+  const output: ChannelBusOut = useMemo(() => {
+    const outputLevel = isPreFader ? preFaderInput + gainValue : postFaderInput + gainValue;
+    return { 
+      sourceId: "ch",
+      destinationId: id,
+      value: outputLevel
+    }
+  }, [sendLevel, isPreFader]);
+
   // change functions
   const handleChangePre = useCallback((evt: ToggleButtonChangeEvent) => {
     setIsPreFader(evt.value)
   }, []);
   const handleChangeSend = useCallback((evt: KnobChangeEvent) => {
-     setSendLevel(evt.value);
+    setSendLevel(evt.value);
   }, []);
+
+  useEffect(() => {
+    handleChange?.channelBusOutput(output);
+  }, [sendLevel]);
 
   return (
     <Box sx={styles.root}>

@@ -1,29 +1,26 @@
 import { render, screen } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
-import 'jest-canvas-mock';
 
 import BusSend from "./BusSend";
 
 describe("<BusSend /> - Integration", () => {
-  it("should call onChange when the Pre button is clicked", () => {
+  it("should toggle the prefader value when clicked", () => {
     // Arrange
-    const onChange = jest.fn();
     
     // Act
     render(
       <BusSend 
-        name="Test"
         id="test"
-        value={0}
-        isPreFader
-        onChange={onChange}
+        name="Test"
+        preFaderInput={-12}
+        postFaderInput={-24}
       />
     );
 
-    const preFaderBtn = screen.getByText("Pre");
+    const preFaderBtn = screen.getByRole("button")
     fireEvent.click(preFaderBtn);
 
     // Assert
-    expect(onChange).toHaveBeenCalled();
-  });
+    expect(false).toBeTruthy();
+    });
 });

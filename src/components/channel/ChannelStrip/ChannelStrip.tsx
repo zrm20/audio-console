@@ -23,7 +23,7 @@ interface ChannelStripProps {
   size?: number;
 };
 
-export default function ChannelStrip(props: ChannelStripProps): JSX.Element {
+function ChannelStrip(props: ChannelStripProps): JSX.Element {
   const { name, inputValue, size = 75, auxes, groups } = props;
   const styles = useStyles(size);
   const { state, handleChange }  = useChannelState();
@@ -31,7 +31,7 @@ export default function ChannelStrip(props: ChannelStripProps): JSX.Element {
   // Level pick points
   const padOutput = inputValue + (state.isPadded ? DEFAULT_PAD_LEVEL : 0);
   const preAmpOutput = padOutput + state.preAmpGain;
-  // const faderOutput = state.isMuted ? MIN_DBFS_VALUE : preAmpOutput + state.faderLevel;
+  const faderOutput = state.isMuted ? MIN_DBFS_VALUE : preAmpOutput + state.faderLevel;
 
   return (
     <Card variant='outlined' sx={styles.root}>
@@ -50,6 +50,8 @@ export default function ChannelStrip(props: ChannelStripProps): JSX.Element {
             id={aux.id}
             name={aux.name}
             size={size}
+            preFaderInput={preAmpOutput}
+            postFaderInput={faderOutput}
           />
         ))
       }
@@ -74,3 +76,5 @@ export default function ChannelStrip(props: ChannelStripProps): JSX.Element {
     </Card>
   );
 };
+
+export default React.memo(ChannelStrip);
