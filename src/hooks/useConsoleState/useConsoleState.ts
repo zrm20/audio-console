@@ -20,7 +20,7 @@ export default function useConsoleState(config: ConsoleStateConfig): ConsoleStat
     }
   };
   config.auxes.forEach(aux => initialState.busses[aux.id] = { name: aux.name, sources: {} });
-  config.groups.forEach(grp => initialState.busses[grp.id] = { name: grp.id, sources: {} });
+  config.groups.forEach(grp => initialState.busses[grp.id] = { name: grp.name, sources: {} });
 
   const [state, dispatch] = useReducer(consoleReducer, initialState);
 

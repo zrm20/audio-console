@@ -10,6 +10,7 @@ import { useConsoleDispatch} from '../../../hooks/useConsoleContext/useConsoleCo
 
 interface BusSendProps {
   id: string;
+  chId: string;
   name: string;
   preFaderInput: number; // in dBfs
   postFaderInput: number; // in dBfs
@@ -19,7 +20,7 @@ interface BusSendProps {
 };
 
 function BusSend(props: BusSendProps): JSX.Element {
-  const { name, size = 100, id, preFaderInput, postFaderInput } = props;
+  const { name, size = 100, id, preFaderInput, postFaderInput, chId } = props;
   const styles = useStyles(size);
   const sizeMultiplier = size / 100;
 
@@ -28,7 +29,7 @@ function BusSend(props: BusSendProps): JSX.Element {
 
   // state
   const initialSendLevel = props.initialSendLevel ? props.initialSendLevel + valueOffset : 0;
-  const [sendLevel, setSendLevel] = useState<number>(0); // will be 0 - MAX
+  const [sendLevel, setSendLevel] = useState<number>(initialSendLevel); // will be 0 - MAX
   const [isPreFader, setIsPreFader] = useState<boolean>(props.initialPreFader || false);
   const handleChange = useConsoleDispatch();
 
@@ -38,11 +39,11 @@ function BusSend(props: BusSendProps): JSX.Element {
   const output: ChannelBusOut = useMemo(() => {
     const outputLevel = isPreFader ? preFaderInput + gainValue : postFaderInput + gainValue;
     return { 
-      sourceId: "ch",
+      sourceId: chId,
       destinationId: id,
       value: outputLevel
     }
-  }, [sendLevel, isPreFader]);
+  }, [sendLevel, isPreFader, preFaderInput, postFaderInput]);
 
   // change functions
   const handleChangePre = useCallback((evt: ToggleButtonChangeEvent) => {
@@ -54,7 +55,7 @@ function BusSend(props: BusSendProps): JSX.Element {
 
   useEffect(() => {
     handleChange?.channelBusOutput(output);
-  }, [sendLevel]);
+  }, [sendLevel, isPreFader, preFaderInput, postFaderInput]);
 
   return (
     <Box sx={styles.root}>
@@ -81,4 +82,4 @@ function BusSend(props: BusSendProps): JSX.Element {
   );
 };
 
-export default React.memo(BusSend);
+export default BusSend;

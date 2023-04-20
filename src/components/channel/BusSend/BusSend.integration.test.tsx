@@ -11,6 +11,7 @@ describe("<BusSend /> - Integration", () => {
     render(
       <BusSend 
         id="test"
+        chId="ch1"
         name="Test"
         preFaderInput={-12}
         postFaderInput={-24}

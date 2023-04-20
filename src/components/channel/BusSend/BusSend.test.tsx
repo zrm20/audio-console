@@ -30,6 +30,7 @@ describe('<BusSend />', () => {
     // Arrange
     const requiredInputProps = {
       id: "test",
+      chId: 'ch1',
       name: "Test",
       preFaderInput: -12,
       postFaderInput: -24,
@@ -61,6 +62,7 @@ describe('<BusSend />', () => {
     const requiredInputProps = {
       id: "test",
       name: "Test",
+      chId: 'ch1',
       preFaderInput: -12,
       postFaderInput: -24,
     };
@@ -80,6 +82,7 @@ describe('<BusSend />', () => {
     const requiredInputProps = {
       id: "test",
       name: "Test",
+      chId: 'ch1',
       preFaderInput: -12,
       postFaderInput: -24,
     };
@@ -103,6 +106,7 @@ describe('<BusSend />', () => {
     const requiredInputProps = {
       id: "test",
       name: "Test",
+      chId: 'ch1',
       preFaderInput: -12,
       postFaderInput: -24,
     };
@@ -124,6 +128,7 @@ describe('<BusSend />', () => {
     const requiredInputProps = {
       id: "test",
       name: "Test",
+      chId: 'ch1',
       preFaderInput: -12,
       postFaderInput: -24,
     };
@@ -143,6 +148,7 @@ describe('<BusSend />', () => {
     const requiredInputProps = {
       id: "test",
       name: "Test",
+      chId: 'ch1',
       preFaderInput: -12,
       postFaderInput: -24,
     };
@@ -161,6 +167,7 @@ describe('<BusSend />', () => {
     const requiredInputProps = {
       id: "test",
       name: "Test",
+      chId: 'ch1',
       preFaderInput: -12,
       postFaderInput: -24,
     };

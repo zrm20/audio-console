@@ -24,13 +24,14 @@ interface ChannelStripProps {
 };
 
 function ChannelStrip(props: ChannelStripProps): JSX.Element {
-  const { name, inputValue, size = 75, auxes, groups } = props;
+  const { name, inputValue, size = 75, auxes, groups, id } = props;
   const styles = useStyles(size);
   const { state, handleChange }  = useChannelState();
 
   // Level pick points
   const padOutput = inputValue + (state.isPadded ? DEFAULT_PAD_LEVEL : 0);
   const preAmpOutput = padOutput + state.preAmpGain;
+  const preFaderOutput = state.isMuted ? MIN_DBFS_VALUE : preAmpOutput;
   const faderOutput = state.isMuted ? MIN_DBFS_VALUE : preAmpOutput + state.faderLevel;
 
   return (
@@ -48,9 +49,10 @@ function ChannelStrip(props: ChannelStripProps): JSX.Element {
           <BusSend
             key={aux.id}
             id={aux.id}
+            chId={id}
             name={aux.name}
             size={size}
-            preFaderInput={preAmpOutput}
+            preFaderInput={preFaderOutput}
             postFaderInput={faderOutput}
           />
         ))

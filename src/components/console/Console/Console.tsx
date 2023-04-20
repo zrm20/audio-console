@@ -51,12 +51,7 @@ export default function Console(props: ConsoleProps): JSX.Element {
                 <BusMaster
                   size={size}
                   key={aux.id}
-                  sources={
-                    [
-           
-                    ]
-                  }
-                  name={aux.name}
+                  id={aux.id}
                 />
               ))
             }
@@ -67,12 +62,7 @@ export default function Console(props: ConsoleProps): JSX.Element {
                 <BusMaster
                   size={size}
                   key={grp.id}
-                  sources={
-                    [
-      
-                    ]
-                  }
-                  name={grp.name}
+                  id={grp.id}
                 />
               ))
             }
